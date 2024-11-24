@@ -18,37 +18,14 @@ class AppColor {
     return Get.context!.theme;
   }
 
+  static Color borderColor = const Color.fromARGB(255, 43, 43, 53);
   static Color primaryColor = const Color.fromARGB(255, 85, 181, 223);
   static Color get whiteColor {
     return Colors.white;
   }
 
-  static ColorScheme get colorScheme {
-    return _appContxt.colorScheme;
-  }
-
-  static Color get scaffoldBackgroundColor {
-    return _appContxt.scaffoldBackgroundColor;
-  }
-
-  static Color get greyColor {
-    return _appContxt.colorScheme.onSurface;
-  }
-
-  static Color get black {
-    return _appContxt.colorScheme.onPrimaryContainer;
-  }
-
   static Color get darkGrey {
     return Colors.grey;
-  }
-
-  static Color get blue {
-    return _appContxt.colorScheme.secondary;
-  }
-
-  static Color get grey {
-    return _appContxt.colorScheme.surface;
   }
 
   static Color bgScaffold = const Color(0xffF5F5F5);

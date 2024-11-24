@@ -90,7 +90,7 @@ class CartController extends GetxController {
           shoppingCart.clear();
           saveCartToStorage();
           update();
-          Get.off(const SuccessScreenOrder());
+          showAlertDialog(content: const SuccessScreenOrder());
         }
       });
     } catch (error) {

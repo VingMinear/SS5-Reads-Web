@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/model/imagemodel.dart';
 import 'package:homework3/modules/admin/product/controller/adproduct_con.dart';
 import 'package:homework3/modules/auth/controller/auth_controller.dart';
 import 'package:homework3/utils/ReponseApiHandler.dart';
@@ -10,7 +11,7 @@ import 'package:homework3/utils/api_base_helper.dart';
 class ProfileController extends GetxController {
   final _apiBaseHelper = ApiBaseHelper();
 
-  Future<void> updatePhoto({required String img}) async {
+  Future<void> updatePhoto({required ImageModel img}) async {
     try {
       var photo = await AdminProductController().uploadPhoto(img);
       var data = await _apiBaseHelper.onNetworkRequesting(

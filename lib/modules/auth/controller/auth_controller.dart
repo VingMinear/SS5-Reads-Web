@@ -76,7 +76,7 @@ class AuthController extends GetxController {
   final imageCon = Get.put(ImagePickerProvider());
   static UserModel? userInformation = UserModel();
   updatePhoto() {
-    imageCon.imageUrl(userInformation!.photo);
+    imageCon.imageUrl(userInformation!.photo.image.value);
   }
 
   Future<void> register({

@@ -3,18 +3,16 @@ import 'dart:developer';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:homework3/constants/color.dart';
+import 'package:homework3/model/imagemodel.dart';
 import 'package:homework3/model/user_model.dart';
-import 'package:homework3/modules/admin/product/screen/adproduct_detail.dart';
+import 'package:homework3/modules/admin/product/controller/CardPhoto.dart';
 import 'package:homework3/modules/profile/screens/add_address_screen.dart';
+import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/ReponseApiHandler.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/utils/api_base_helper.dart';
-import 'package:homework3/utils/image_picker.dart';
-import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
 import 'package:homework3/widgets/primary_button.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditAdminUser extends StatefulWidget {
   const EditAdminUser({super.key, required this.user});
@@ -41,6 +39,10 @@ class _EditAdminUserState extends State<EditAdminUser> {
   }
 
   var userType = listType.first;
+  var border = OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey.shade200),
+    borderRadius: BorderRadius.circular(6),
+  );
   static var listType = ["Admin", "Customer"];
   @override
   Widget build(BuildContext context) {
@@ -58,42 +60,16 @@ class _EditAdminUserState extends State<EditAdminUser> {
               child: Column(
                 children: [
                   FadeIn(
-                    child: GestureDetector(
-                      onTap: () {
-                        dismissKeyboard(context);
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return cupertinoModal(context, (index) async {
-                              Get.back();
-
-                              await ImagePickerProvider()
-                                  .pickImage(
-                                source: index == 0
-                                    ? ImageSource.gallery
-                                    : ImageSource.camera,
-                                updateProfile: true,
-                                userId: user.value.id ?? '',
-                              )
-                                  .then((value) {
-                                user.value.photo = value;
-                              });
-                            });
-                          },
-                        );
+                    child: CardPhoto(
+                      image: user.value.photo,
+                      onPhotoPicker: (path) {
+                        user.value.photo = ImageModel.uploadImageWeb(path!);
+                        setState(() {});
                       },
-                      child: Container(
-                        width: 110,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.shade200,
-                        ),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: CustomCachedNetworkImage(
-                          imgUrl: user.value.photo,
-                        ),
-                      ),
+                      onClear: () {
+                        user.value.photo = ImageModel.instance;
+                        setState(() {});
+                      },
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -145,8 +121,6 @@ class _EditAdminUserState extends State<EditAdminUser> {
                                       isExpanded: true,
                                       value: userType,
                                       decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: grey.withOpacity(0.4),
                                         hintText: "User Type",
                                         hintStyle: const TextStyle(
                                           fontSize: 15,
@@ -154,13 +128,11 @@ class _EditAdminUserState extends State<EditAdminUser> {
                                         ),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                                vertical: 12, horizontal: 12),
+                                                vertical: 16, horizontal: 12),
                                         isDense: true,
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
+                                        border: border,
+                                        enabledBorder: border,
+                                        focusedBorder: border,
                                       ),
                                       onChanged: (value) {
                                         userType = value!;
@@ -259,6 +231,7 @@ class _EditAdminUserState extends State<EditAdminUser> {
           isTypeAdmin = true;
         }
       }
+
       var res = await _apiBaseHelper.onNetworkRequesting(
         url: 'users/$useId',
         methode: METHODE.update,
@@ -272,7 +245,7 @@ class _EditAdminUserState extends State<EditAdminUser> {
       );
       var data = checkResponse(res);
       if (data.isSuccess) {
-        Get.back();
+        router.pop();
         showTaost('User has been updated');
       }
     } catch (error) {

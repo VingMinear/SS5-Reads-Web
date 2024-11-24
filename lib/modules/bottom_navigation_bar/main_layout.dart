@@ -3,6 +3,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/constants/color.dart';
 import 'package:homework3/modules/auth/screens/login_screen.dart';
 import 'package:homework3/modules/bottom_navigation_bar/bottom_controller.dart';
 import 'package:homework3/modules/profile/screens/profile_screen.dart';
@@ -29,7 +30,7 @@ class _MainLayoutState extends State<MainLayout> {
   var listMenu = [
     "Home",
     "Shop",
-    "About Us",
+    "About",
     "Contact Us",
   ];
 
@@ -37,13 +38,6 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     Get.put(MapController()).customMarkerIcon();
-    Future.delayed(
-      const Duration(milliseconds: 800),
-      () {
-        // Get.put(MapController()).currentLocaton();
-      },
-    );
-    var con = Get.put(BottomController());
 
     return Scaffold(
       backgroundColor: const Color(0xffFBFAF6),
@@ -110,8 +104,10 @@ class _MainLayoutState extends State<MainLayout> {
                                           router.go('/list-products');
                                           break;
                                         case 2:
+                                          router.go('/about-us');
                                           break;
                                         default:
+                                          router.go('/contact-us');
                                           break;
                                       }
                                     },
@@ -132,7 +128,7 @@ class _MainLayoutState extends State<MainLayout> {
                             children: [
                               Expanded(
                                 child: SizedBox(
-                                  height: 45,
+                                  height: 40,
                                   child: StatefulBuilder(
                                       builder: (context, state) {
                                     return TextField(
@@ -186,30 +182,43 @@ class _MainLayoutState extends State<MainLayout> {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              IconButton(
-                                onPressed: () {
-                                  router.go('/cart');
-                                },
-                                icon: cartIcon(Colors.black),
-                              ),
-                              Builder(builder: (context) {
-                                return IconButton(
+                              if (GlobalClass().isUserLogin)
+                                IconButton(
                                   onPressed: () {
-                                    if (GlobalClass().isUserLogin) {
-                                      showFilterOverlay(
-                                        offset: const Offset(80, 10),
-                                        context: context,
-                                        widget: const Profile(),
-                                      );
-                                    } else {
-                                      showAlertDialog(
-                                        context: context,
-                                        content: const LoginScreen(),
-                                      );
-                                    }
+                                    router.go('/cart');
                                   },
-                                  icon: const Icon(Icons.person),
-                                );
+                                  icon: cartIcon(Colors.black),
+                                ),
+                              Builder(builder: (context) {
+                                return GlobalClass().isUserLogin
+                                    ? IconButton(
+                                        onPressed: () {
+                                          showFilterOverlay(
+                                            offset: const Offset(80, 10),
+                                            context: context,
+                                            widget: const Profile(),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.person),
+                                      )
+                                    : OutlinedButton(
+                                        onPressed: () {
+                                          showAlertDialog(
+                                            context: context,
+                                            content: const LoginScreen(),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          side: const BorderSide(
+                                            color: mainColor,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                        child: const Text('Login'),
+                                      );
                               }),
                             ],
                           ),

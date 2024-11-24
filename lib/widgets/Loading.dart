@@ -4,7 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../utils/colors.dart';
+import 'package:homework3/constants/color.dart';
 
 class Loading extends StatelessWidget {
   const Loading({
@@ -28,7 +28,7 @@ class Loading extends StatelessWidget {
           Visibility(
             visible: loading.value,
             child: Container(
-              color: bgColor ?? AppColor.scaffoldBackgroundColor,
+              color: bgColor ?? scaffoldColor,
               alignment: Alignment.center,
               padding: const EdgeInsets.only(top: 23),
               child: Container(

@@ -1,14 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-const defualtImage =
-    'https://firebasestorage.googleapis.com/v0/b/fir-auth-1d214.appspot.com/o/empty.jpg?alt=media&token=34a0ae35-94b2-4007-97cb-e55797ab9257';
+import 'package:homework3/model/imagemodel.dart';
 
 class UserModel {
   String? id;
   String? name;
   String? email;
   String? phone;
-  String photo = '';
+  ImageModel photo = ImageModel.instance;
   String? provide;
   bool isActive = true;
   bool isAdmin = false;
@@ -16,7 +15,6 @@ class UserModel {
       {this.id,
       this.name,
       this.email,
-      this.photo = defualtImage,
       this.provide,
       this.isActive = true,
       this.phone,
@@ -27,7 +25,7 @@ class UserModel {
     name = json['name'];
     email = json['email'];
     if (json['photo'] != null && json['photo'].isNotEmpty) {
-      photo = "${json['photo']}";
+      photo = ImageModel.fromNetwork(json['photo'] ?? '');
     }
     phone = json['phone'];
     isActive = json['active'] ?? true;

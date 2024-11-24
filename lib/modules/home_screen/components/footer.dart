@@ -24,7 +24,7 @@ class Footer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              constraints: const BoxConstraints(maxWidth: BreakPoint.md),
+              constraints: const BoxConstraints(maxWidth: BreakPoint.lg),
               padding: const EdgeInsets.all(10),
               child: BootstrapRow(
                 runSpacing: 15,

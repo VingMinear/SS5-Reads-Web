@@ -1,17 +1,10 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:homework3/modules/profile/controller/profile_controller.dart';
-import 'package:homework3/utils/LocalStorage.dart';
-import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
-import 'package:homework3/widgets/PhotoViewDetail.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../utils/SingleTon.dart';
-import '../../../utils/image_picker.dart';
 
 class ProfileHeader extends StatefulWidget {
   const ProfileHeader({super.key});
@@ -43,7 +36,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   ),
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: CustomCachedNetworkImage(
-                    imgUrl: user.value.photo,
+                    imgUrl: user.value.photo.image.value,
                   ),
                 ),
                 const VerticalDivider(
@@ -81,70 +74,4 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       ),
     );
   }
-}
-
-Widget cupertinoModal(BuildContext context, {Function()? setState}) {
-  var user = GlobalClass().user.value;
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(_cupertino.length, (index) {
-        return ListTile(
-          onTap: () async {
-            Get.back();
-            var userId = LocalStorage.getStringData(key: 'user_id');
-            switch (index) {
-              case 0:
-                Get.to(
-                  PhotoViewDetail(imageUrl: user.photo),
-                );
-                break;
-              default:
-                var res = await ImagePickerProvider().pickImage(
-                  source: index == 1 ? ImageSource.gallery : ImageSource.camera,
-                  updateProfile: true,
-                  userId: userId,
-                );
-                if (res.isNotEmpty) {
-                  loadingDialog();
-                  await ProfileController().updatePhoto(img: res);
-                  if (setState != null) setState();
-                  popLoadingDialog();
-                }
-                break;
-            }
-          },
-          title: Text(_cupertino[index].title!),
-          leading: _cupertino[index].icon,
-        );
-      }),
-    ),
-  );
-}
-
-List<CupertinoItem> _cupertino = [
-  CupertinoItem(
-    title: 'View Photo',
-    icon: const Icon(CupertinoIcons.photo),
-  ),
-  CupertinoItem(
-    title: 'Upload Photo',
-    icon: const Icon(CupertinoIcons.cloud_upload),
-  ),
-  CupertinoItem(
-    title: 'Camera',
-    icon: const Icon(CupertinoIcons.camera),
-  ),
-];
-
-class CupertinoItem {
-  String? title;
-  Icon? icon;
-
-  CupertinoItem({
-    this.title,
-    this.icon,
-  });
 }

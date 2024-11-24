@@ -15,10 +15,8 @@ class AdminProductController extends GetxController {
   var isNotFound = false.obs;
   var selectCateIndex = 0;
   var allProducts = <ProductModel>[].obs;
-  var listCategory = [
-    Category(ImageModel.instance, "All", 0),
-    ...(categoryCon.homeCategries)
-  ];
+  List get listCategory =>
+      [Category(ImageModel.instance, "All", 0), ...(categoryCon.homeCategries)];
   static final categoryCon = Get.put(CategoryController());
 
   var txtSearch = TextEditingController();
@@ -73,13 +71,13 @@ class AdminProductController extends GetxController {
     return result;
   }
 
-  Future<String> uploadPhoto(String image) async {
+  Future<String> uploadPhoto(ImageModel image) async {
     var url = '';
     try {
       await _apiBaseHelper
           .postAsyncImage(
         header: null,
-        url: "$baseurl/api/upload-photo",
+        url: "${baseurl}api/upload-photo",
         dataImage: image,
       )
           .then((value) {
@@ -97,6 +95,7 @@ class AdminProductController extends GetxController {
 
   Future<void> addProduct(
       {required String pname,
+      required String desc,
       required double priceIn,
       required double priceout,
       required int qty,
@@ -105,8 +104,9 @@ class AdminProductController extends GetxController {
     try {
       var img = '';
       if (image.photoViewBy == PhotoViewBy.file &&
-          image.image.value.isNotEmpty) {
-        await uploadPhoto(image.image.value).then((value) {
+              image.image.value.isNotEmpty ||
+          image.bytes != null) {
+        await uploadPhoto(image).then((value) {
           img = value;
         });
       }
@@ -120,12 +120,14 @@ class AdminProductController extends GetxController {
                 "qty": qty,
                 "category_id": categoryId,
                 "image": img,
+                "desc": desc,
                 "price_in": priceIn,
                 "price_out": priceout
               }
             : {
                 "product_name": pname,
                 "qty": qty,
+                "desc": desc,
                 "category_id": categoryId,
                 "price_in": priceIn,
                 "price_out": priceout
@@ -147,6 +149,7 @@ class AdminProductController extends GetxController {
   Future<void> updateProduct(
       {required int pid,
       required String pname,
+      required String desc,
       required double priceIn,
       required double priceout,
       required int qty,
@@ -155,8 +158,9 @@ class AdminProductController extends GetxController {
     try {
       var img = image.image.value.replaceAll("${baseurl}image/", '');
       if (image.photoViewBy == PhotoViewBy.file &&
-          image.image.value.isNotEmpty) {
-        await uploadPhoto(image.image.value).then((value) {
+              image.image.value.isNotEmpty ||
+          image.bytes != null) {
+        await uploadPhoto(image).then((value) {
           img = value;
         });
       } else if (!image.image.contains(baseurl)) {}
@@ -169,6 +173,7 @@ class AdminProductController extends GetxController {
           "product_name": pname,
           "qty": qty,
           "category_id": categoryId,
+          "desc": desc,
           "image": img,
           "price_in": priceIn,
           "price_out": priceout

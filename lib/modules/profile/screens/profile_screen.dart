@@ -49,8 +49,10 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  static _profileIcon(String last) => 'assets/icons/profile/$last';
+  static String _profileIcon(String last) => 'assets/icons/profile/$last';
   List get datas => <ProfileOption>[
+        ProfileOption.arrow(
+            title: 'Favorite', icon: 'assets/icons/light/heart@2x.png'),
         ProfileOption.arrow(title: 'Order', icon: _profileIcon('order.png')),
         ProfileOption.arrow(
             title: 'Address', icon: _profileIcon('location@2x.png')),
@@ -120,15 +122,20 @@ class _ProfileState extends State<Profile> {
       ),
       trailing: data.trailing,
       onTap: () {
+        removeOverlay();
         switch (index) {
           case 0:
-            Get.to(const OrderScreen());
+            router.go('/my-favorite');
             break;
           case 1:
-            Get.to(AddressScreen());
+            router.go('/my-order');
+            break;
+          case 2:
+            showAlertDialog(
+              content: AddressScreen(),
+            );
             break;
           default:
-            removeOverlay();
             alertDialogConfirmation(
               title: "Logout",
               desc: "Are you sure you want to Logout ?",

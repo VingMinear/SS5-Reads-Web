@@ -14,7 +14,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
   final BoxFit? fit;
   @override
   Widget build(BuildContext context) {
-    // log("$baseurl$imgUrl");
+    // Log.info("$baseurl$imgUrl");
     return CachedNetworkImage(
       imageUrl: "$baseurl$imgUrl",
       fit: BoxFit.cover,
@@ -26,6 +26,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
           ),
         );
       },
+      errorListener: (value) {},
       errorWidget: (context, url, error) => Image.asset(
         'images/empty.jpg',
         fit: fit ?? BoxFit.cover,

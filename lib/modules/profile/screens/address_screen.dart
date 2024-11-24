@@ -18,91 +18,104 @@ class AddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     con.getAddress();
-    return Scaffold(
-      appBar: customAppBar(
-        title: selectAddress ? 'Select your address' : 'Address',
-        showNotification: false,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: shadow,
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(15),
       ),
-      body: Obx(
-        () {
-          return con.loading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : con.listAddress.isEmpty
-                  ? const Center(child: Text('No Address found.'))
-                  : SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        children: [
-                          ListView.separated(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(20),
-                            itemCount: con.listAddress.length,
-                            itemBuilder: (context, index) {
-                              var item = con.listAddress[index];
-                              return InkWell(
-                                onTap: () {
-                                  if (selectAddress) {
-                                    Navigator.pop(context, item);
-                                  } else {
-                                    Get.to(AddAddressScreen(
-                                      addNew: false,
-                                      address: item,
-                                    ));
-                                  }
-                                },
-                                child: buildAddress(item),
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 20),
-                          ),
-                        ],
-                      ),
-                    );
-        },
-      ),
-      // SlidableAction(
-      //                 onPressed: (context) {
-
-      //                 },
-      //                 backgroundColor: Colors.red,
-      //                 foregroundColor: Colors.white,
-      //                 icon: Icons.delete,
-      //                 label: 'Delete',
-      //                 borderRadius:
-      //                     const BorderRadius.horizontal(
-      //                   left: Radius.circular(10),
-      //                 ),
-      //               ),
-      //               SlidableAction(
-      //                 onPressed: (context) {
-
-      //                 },
-      //                 backgroundColor: Colors.blue,
-      //                 foregroundColor: Colors.white,
-      //                 icon: Icons.edit,
-      //                 label: 'Edit',
-      //                 borderRadius:
-      //                     const BorderRadius.horizontal(
-      //                   right: Radius.circular(10),
-      //                 ),
-      //               ),
-
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: CustomPrimaryButton(
-          textValue: 'Add new address',
-          textColor: Colors.white,
-          onPressed: () async {
-            showAlertDialog(
-              barrierColor: Colors.transparent,
-              content: AddAddressScreen(
-                addNew: true,
-              ),
-            );
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Scaffold(
+        appBar: customAppBar(
+          title: selectAddress ? 'Select your address' : 'Address',
+          showNotification: false,
+        ),
+        backgroundColor: Colors.transparent,
+        body: Obx(
+          () {
+            return con.loading.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : con.listAddress.isEmpty
+                    ? const Center(child: Text('No Address found.'))
+                    : SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            ListView.separated(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(20),
+                              itemCount: con.listAddress.length,
+                              itemBuilder: (context, index) {
+                                var item = con.listAddress[index];
+                                return InkWell(
+                                  onTap: () {
+                                    if (selectAddress) {
+                                      Navigator.pop(context, item);
+                                    } else {
+                                      showAlertDialog(
+                                        barrierColor: Colors.transparent,
+                                        content: AddAddressScreen(
+                                          addNew: false,
+                                          address: item,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: buildAddress(item),
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 20),
+                            ),
+                          ],
+                        ),
+                      );
           },
+        ),
+        // SlidableAction(
+        //                 onPressed: (context) {
+
+        //                 },
+        //                 backgroundColor: Colors.red,
+        //                 foregroundColor: Colors.white,
+        //                 icon: Icons.delete,
+        //                 label: 'Delete',
+        //                 borderRadius:
+        //                     const BorderRadius.horizontal(
+        //                   left: Radius.circular(10),
+        //                 ),
+        //               ),
+        //               SlidableAction(
+        //                 onPressed: (context) {
+
+        //                 },
+        //                 backgroundColor: Colors.blue,
+        //                 foregroundColor: Colors.white,
+        //                 icon: Icons.edit,
+        //                 label: 'Edit',
+        //                 borderRadius:
+        //                     const BorderRadius.horizontal(
+        //                   right: Radius.circular(10),
+        //                 ),
+        //               ),
+
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: CustomPrimaryButton(
+            textValue: 'Add new address',
+            textColor: Colors.white,
+            onPressed: () async {
+              showAlertDialog(
+                barrierColor: Colors.transparent,
+                content: AddAddressScreen(
+                  addNew: true,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

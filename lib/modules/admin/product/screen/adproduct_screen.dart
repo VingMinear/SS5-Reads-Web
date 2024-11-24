@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
+import 'package:go_router/go_router.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/category.dart';
+import 'package:homework3/modules/admin/order/screens/admin_order_screen.dart';
 import 'package:homework3/modules/admin/product/screen/adproduct_detail.dart';
+import 'package:homework3/modules/home_screen/components/mainbody.dart';
+import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/Utilty.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:homework3/widgets/CustomButton.dart';
 
-import '../../../../utils/colors.dart';
 import '../../../../widgets/CustomNoContent.dart';
-import '../../../../widgets/custom_appbar.dart';
-import '../../../../widgets/grid_card_shimmer.dart';
 import '../../../../widgets/product_card.dart';
 import '../controller/adproduct_con.dart';
 
@@ -58,27 +58,6 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: customAppBar(title: 'Product', backgroundColor: Colors.white),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() {
-            return const AdminProductDetail(
-              isEdit: false,
-              pId: 0,
-            );
-          })!
-              .then((value) async => await con.fetchProduct());
-        },
-        heroTag: "",
-        elevation: 1,
-        tooltip: "Add Product",
-        backgroundColor: Colors.black.withOpacity(0.45),
-        shape: CircleBorder(side: BorderSide(color: AppColor.whiteColor)),
-        child: SvgPicture.asset(
-          'assets/icons/ic_add.svg',
-          width: 20,
-        ),
-      ),
       body: GetX<AdminProductController>(
         init: AdminProductController(),
         builder: (conPro) {
@@ -92,33 +71,81 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
             child: Column(
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: AppColor.boxShadow,
-                      borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(15),
-                      )),
-                  child: Column(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  color: Colors.white,
+                  child: Row(
                     children: [
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: SearchBarWidget(
-                          controller: con.txtSearch,
-                          onChanged: (p0) {
-                            debouce.call(() {
-                              con.fetchProduct();
-                            });
-                          },
+                      const Text(
+                        "Orders",
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      Expanded(
+                        flex: 2,
+                        child: DefaultTabController(
+                          length: con.listCategory.length,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(left: 8.0),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            child: TabBar(
+                              isScrollable: true,
+                              labelPadding: EdgeInsets.zero,
+                              indicatorColor: Colors.transparent,
+                              dividerColor: Colors.transparent,
+                              tabAlignment: TabAlignment.start,
+                              onTap: (index) async {
+                                conPro.selectCateIndex = index;
+                                await con.fetchProduct();
+                              },
+                              overlayColor: const WidgetStatePropertyAll(
+                                  Colors.transparent),
+                              tabs: List.generate(
+                                con.listCategory.length,
+                                (index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                    child: buildTabBar(
+                                      title: con.listCategory[index].title,
+                                      isSelected: con.selectCateIndex == index,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      buildCategory(),
-                      const SizedBox(
-                        height: 10,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SearchBarWidget(
+                            controller: con.txtSearch,
+                            onChanged: (p0) {
+                              debouce.call(() {
+                                con.fetchProduct();
+                              });
+                            },
+                          ),
+                        ),
                       ),
+                      CustomButton(
+                        onPress: () {
+                          showAlertDialog(
+                            content: const AdminProductDetail(
+                              isEdit: false,
+                              pId: 0,
+                            ),
+                          );
+                        },
+                        title: 'Create',
+                      )
                     ],
                   ),
                 ),
@@ -142,36 +169,41 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
                                   ),
                                   conPro.loading.value
                                       ? buildShimmerGrid()
-                                      : GridView.builder(
-                                          itemCount: conPro.allProducts.length,
-                                          gridDelegate:
-                                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 15,
-                                            crossAxisSpacing: 15,
-                                            mainAxisExtent: 265,
-                                          ),
-                                          shrinkWrap: true,
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            var data =
-                                                conPro.allProducts[index];
-                                            return ProductCard(
-                                              data: data,
-                                              isAdmin: true,
-                                              ontap: (data) {
-                                                Get.to(() {
-                                                  return AdminProductDetail(
-                                                    isEdit: true,
-                                                    pId: data.productId ?? 0,
-                                                  );
-                                                })!
-                                                    .then(
-                                                  (value) async =>
-                                                      await con.fetchProduct(),
+                                      : LayoutBuilder(
+                                          builder: (context, box) {
+                                            var sliverDelegate =
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount:
+                                                  gridCount(box.maxWidth),
+                                              mainAxisExtent: 250,
+                                              crossAxisSpacing: 20,
+                                              mainAxisSpacing: 20,
+                                            );
+                                            return GridView.builder(
+                                              itemCount:
+                                                  conPro.allProducts.length,
+                                              gridDelegate: sliverDelegate,
+                                              shrinkWrap: true,
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                var data =
+                                                    conPro.allProducts[index];
+                                                return ProductCard(
+                                                  data: data,
+                                                  isAdmin: true,
+                                                  ontap: (data) {
+                                                    showAlertDialog(
+                                                      content:
+                                                          AdminProductDetail(
+                                                        isEdit: true,
+                                                        pId:
+                                                            data.productId ?? 0,
+                                                      ),
+                                                    );
+                                                  },
                                                 );
                                               },
                                             );
@@ -188,80 +220,6 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
           );
         },
       ),
-    );
-  }
-
-  Widget buildCategory() {
-    var conPro = Get.put(AdminProductController());
-    return Obx(
-      () => loading.value
-          ? SizedBox(
-              height: 40,
-              width: double.infinity,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (ctx, index) => Shimmer.fromColors(
-                  baseColor: Colors.grey.shade200,
-                  highlightColor: Colors.grey.shade100,
-                  child: Container(
-                    width: 70,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                itemCount: 6,
-              ),
-            )
-          : DefaultTabController(
-              length: conPro.listCategory.length,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 40,
-                child: TabBar(
-                  tabAlignment: TabAlignment.start,
-                  isScrollable: true,
-                  dividerColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  splashBorderRadius: BorderRadius.circular(12),
-                  onTap: (index) async {
-                    conPro.selectCateIndex = index;
-                    await con.fetchProduct();
-                  },
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 25),
-                  tabs: conPro.listCategory.map((e) {
-                    return Tab(
-                      child: Text(
-                        e.title,
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-    );
-  }
-
-  Widget buildShimmerGrid() {
-    return GridView.builder(
-      itemCount: 6,
-      padding: const EdgeInsets.only(bottom: 20),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
-        mainAxisExtent: 265,
-      ),
-      itemBuilder: (context, index) {
-        return const GridShimmer(
-          isAdmin: true,
-        );
-      },
     );
   }
 }

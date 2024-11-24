@@ -2,6 +2,7 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
+import 'package:homework3/modules/cart/screens/success_order.dart';
 import 'package:homework3/modules/profile/screens/address_screen.dart';
 import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/StripeHandler.dart';
@@ -74,7 +75,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         textColor: Colors.white,
                         onPressed: () async {
                           if (address.value.id != null) {
+                            router.pop();
                             if (currentOpt.value == 'Credit / Debit Card') {
+                              showAlertDialog(
+                                  content: const SuccessScreenOrder());
                               // var isSuccess = await StripePaymentHandle()
                               //     .stripeMakePayment(amount: widget.total);
                               if (false) {

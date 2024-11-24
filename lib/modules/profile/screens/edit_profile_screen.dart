@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/model/imagemodel.dart';
+import 'package:homework3/modules/admin/product/controller/CardPhoto.dart';
 import 'package:homework3/modules/profile/controller/profile_controller.dart';
 
 import '../../../utils/SingleTon.dart';
@@ -48,29 +50,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                 children: [
                   FadeIn(
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return cupertinoModal(context, setState: () {
-                              setState(() {});
-                            });
-                          },
-                        );
+                    child: CardPhoto(
+                      onPhotoPicker: (path) {
+                        user.value.photo = ImageModel.uploadImageWeb(path!);
                       },
-                      child: Container(
-                        width: 110,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.shade200,
-                        ),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: CustomCachedNetworkImage(
-                          imgUrl: user.value.photo,
-                        ),
-                      ),
+                      image: user.value.photo,
+                      onClear: () {
+                        user.value.photo = ImageModel.instance;
+                      },
                     ),
                   ),
                   const SizedBox(height: 10),

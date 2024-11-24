@@ -68,6 +68,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var authCon = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
+    var border = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey.shade200),
+      borderRadius: BorderRadius.circular(6),
+    );
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -122,27 +126,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           child:
                                               DropdownButtonFormField<String>(
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(6),
                                             isDense: true,
                                             isExpanded: true,
+                                            hint: const Text('User Type'),
                                             decoration: InputDecoration(
-                                              filled: true,
-                                              fillColor: grey.withOpacity(0.4),
-                                              hintText: "User Type",
                                               hintStyle: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                               contentPadding:
                                                   const EdgeInsets.symmetric(
-                                                      vertical: 12,
+                                                      vertical: 16,
                                                       horizontal: 12),
                                               isDense: true,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
+                                              border: border,
+                                              focusedBorder: border,
+                                              enabledBorder: border,
                                             ),
                                             onChanged: (value) {
                                               userType = value!;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/main.dart';
 import 'package:homework3/utils/colors.dart';
 
 import '../constants/Color.dart';
@@ -74,19 +75,17 @@ TextStyle hintStyle(
 }
 
 TextStyle errorStyle(
-    {Color? color,
-    FontWeight weight = FontWeight.w400,
-    double fontSized = 13}) {
+    {Color? color, FontWeight weight = FontWeight.w400, double fontSize = 13}) {
   return TextStyle(
-    fontSize: (fontSized),
+    fontSize: (fontSize),
     fontWeight: weight,
     color: color ?? Colors.red,
   );
 }
 
 class AppText {
-  static TextTheme get _txtTheme => Get.context!.textTheme;
-  static ThemeData get theme => Get.context!.theme;
+  static TextTheme get _txtTheme => globalContext!.textTheme;
+  static ThemeData get theme => globalContext!.theme;
   static TextStyle get txt36 => _txtTheme.headlineLarge!; // font size (36),
   static TextStyle get txt25 => _txtTheme.headlineMedium!; // font size (25),
   static TextStyle get txt22 => _txtTheme.headlineSmall!; // font size (22),

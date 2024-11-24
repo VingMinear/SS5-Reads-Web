@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:homework3/utils/Log.dart';
+import 'package:homework3/utils/ReponseApiHandler.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:get/get_connect.dart';
+import 'package:homework3/model/imagemodel.dart';
 import 'package:http/http.dart' as http;
 
 class ErrorModel {
@@ -62,24 +65,39 @@ class ApiBaseHelper extends GetConnect {
   Future<dynamic> postAsyncImage({
     required Map<String, String>? header,
     required String url,
-    required String dataImage,
+    required ImageModel dataImage,
   }) async {
     dynamic dataResponse;
+    try {
+      //Request
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll({'Content-Type': 'multipart/form-data'});
+      if (dataImage.bytes != null) {
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'photo', // This should match the field name expected in your Express route
+            dataImage.bytes!,
+            filename: dataImage.image.value.split('/').last,
+            contentType:
+                MediaType('image', 'jpeg'), // Change based on the file type
+          ),
+        );
+      }
 
-    //Request
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        'photo',
-        dataImage,
-      ),
-    );
-    http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      var data = await response.stream.bytesToString();
-      print(data);
-      dataResponse = await json.decode(data);
+      if (response.statusCode == 200) {
+        var data = await response.stream.bytesToString();
+        print(data);
+        dataResponse = await json.decode(data);
+      } else {
+        var data = await response.stream.bytesToString();
+        print(data);
+        dataResponse = await json.decode(data);
+        checkResponse(dataResponse);
+      }
+    } catch (e) {
+      Log.error(e);
     }
 
     return dataResponse;

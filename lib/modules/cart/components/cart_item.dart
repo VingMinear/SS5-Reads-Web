@@ -34,8 +34,8 @@ class _CartItemState extends State<CartItem> {
         child: Row(
           children: [
             Container(
-              width: 100,
-              height: 130,
+              width: 80,
+              height: 100,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
@@ -95,8 +95,8 @@ class _CartItemState extends State<CartItem> {
         child: Row(
           children: [
             Container(
-              width: 100,
-              height: 130,
+              width: 80,
+              height: 100,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),

@@ -55,8 +55,9 @@ class CategoryController extends GetxController {
     required ImageModel img,
   }) async {
     var image = img.image.value.replaceAll("${baseurl}image/", '');
-    if (img.photoViewBy == PhotoViewBy.file && img.image.value.isNotEmpty) {
-      await AdminProductController().uploadPhoto(image).then((value) {
+    if (img.photoViewBy == PhotoViewBy.file && img.image.value.isNotEmpty ||
+        img.bytes != null) {
+      await AdminProductController().uploadPhoto(img).then((value) {
         image = value;
       });
     }
@@ -110,9 +111,10 @@ class CategoryController extends GetxController {
     bool isSuccess = false;
     try {
       var image = '';
-      if (img.photoViewBy == PhotoViewBy.file) {
+      if (img.photoViewBy == PhotoViewBy.file && img.image.value.isNotEmpty ||
+          img.bytes != null) {
         await AdminProductController()
-            .uploadPhoto(img.image.value)
+            .uploadPhoto(img)
             .then((value) => image = value);
       }
       await _apiBaseHelper.onNetworkRequesting(

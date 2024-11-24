@@ -37,8 +37,9 @@ showTaost(String desc, {ToastificationType? type}) {
     context: globalContext!, // optional if you use ToastificationWrapper
     title: Text(desc),
     autoCloseDuration: const Duration(seconds: 2),
-    // style: ToastificationStyle.fillColored,
+    style: ToastificationStyle.minimal,
     animationDuration: const Duration(milliseconds: 330),
+    pauseOnHover: false,
     type: type ?? ToastificationType.success,
     alignment: Alignment.bottomRight, borderRadius: BorderRadius.circular(8),
   );
@@ -234,7 +235,6 @@ int gridCount(double width) {
 
 void logOut() async {
   LocalStorage.removeData(key: "token");
-
   router.go('/');
 }
 
@@ -383,86 +383,95 @@ customalertDialogConfirmation({
   bool barrierDismissible = true,
 }) async {
   await showDialog(
-    context: Get.context!,
+    context: globalContext!,
     builder: (context) {
       return WillPopScope(
         onWillPop: () async {
           return barrierDismissible;
         },
-        child: Dialog(
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular((14)),
-          ),
-          insetPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 10, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title ?? '',
-                        style: AppText.txt16.copyWith(),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: const Icon(
-                          Icons.clear_rounded,
-                        ),
-                      ),
-                    ],
-                  ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 450),
+              child: Dialog(
+                surfaceTintColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular((14)),
                 ),
-                Padding(
-                  padding: paddingBody ??
-                      const EdgeInsets.all(20.0).copyWith(top: 10),
+                insetPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 24.0),
+                child: SingleChildScrollView(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      child ?? const SizedBox.shrink(),
                       Padding(
-                        padding: paddingButton ??
-                            const EdgeInsets.all(20.0).copyWith(top: 0),
+                        padding: const EdgeInsets.only(
+                            left: 20.0, top: 10, right: 5),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: CustomButton(
-                                backgroundColor: Colors.transparent,
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                                textStyle: btnTextStyle(
-                                  color: Colors.red,
-                                ),
-                                title: txtBtnCancel ?? 'cancel'.tr,
-                                onPress: () {
-                                  Get.back();
-                                },
-                              ),
+                            Text(
+                              title ?? '',
+                              style: AppText.txt16.copyWith(),
                             ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: CustomButton(
-                                title: txtBtnCfn ?? 'cf'.tr,
-                                onPress: onConfirm ?? () {},
-                                textStyle: btnTextStyle(
-                                  color: Colors.white,
-                                ),
+                            IconButton(
+                              onPressed: () {
+                                router.pop();
+                              },
+                              icon: const Icon(
+                                Icons.clear_rounded,
                               ),
                             ),
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: paddingBody ??
+                            const EdgeInsets.all(20.0).copyWith(top: 10),
+                        child: Column(
+                          children: [
+                            child ?? const SizedBox.shrink(),
+                            Padding(
+                              padding: paddingButton ??
+                                  const EdgeInsets.all(20.0).copyWith(top: 0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomButton(
+                                      backgroundColor: Colors.transparent,
+                                      borderSide: const BorderSide(
+                                        color: Colors.red,
+                                      ),
+                                      textStyle: btnTextStyle(
+                                        color: Colors.red,
+                                      ),
+                                      title: txtBtnCancel ?? 'cancel'.tr,
+                                      onPress: () {
+                                        router.pop();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Expanded(
+                                    child: CustomButton(
+                                      title: txtBtnCfn ?? 'cf'.tr,
+                                      onPress: onConfirm ?? () {},
+                                      textStyle: btnTextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ),

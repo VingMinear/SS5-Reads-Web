@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/modules/admin/order/components/build_list_card.dart';
+import 'package:homework3/utils/Utilty.dart';
+import 'package:homework3/utils/break_point.dart';
 import 'package:homework3/widgets/CustomNoContent.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
 
@@ -33,55 +35,70 @@ class _AdminOrderScreenState extends State<AdminOrderScreen> {
     var debounce = Debouncer(delay: const Duration(milliseconds: 200));
     var scrollCon = ScrollController();
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Order',
-      ),
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Column(
           children: [
-            DefaultTabController(
-              length: con.lsTabOrder.length,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(left: 8.0),
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                child: TabBar(
-                  isScrollable: true,
-                  labelPadding: EdgeInsets.zero,
-                  indicatorColor: Colors.transparent,
-                  dividerColor: Colors.transparent,
-                  tabAlignment: TabAlignment.start,
-                  onTap: (index) async {
-                    con.selected(index);
-                    con.loading(true);
-                    if (scrollCon.hasClients) {
-                      scrollCon.jumpTo(0);
-                    }
-                    debounce.call(() async {
-                      await con.onRefresh();
-                    });
-                  },
-                  overlayColor:
-                      const MaterialStatePropertyAll(Colors.transparent),
-                  tabs: List.generate(
-                    con.lsTabOrder.length,
-                    (index) {
-                      return Obx(
-                        () => Padding(
-                          padding: const EdgeInsets.only(
-                            right: 10,
-                          ),
-                          child: buildTabBar(
-                            title: con.lsTabOrder[index].title,
-                            isSelected: con.selected.value == index,
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  const Text(
+                    "Orders",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Expanded(
+                    child: DefaultTabController(
+                      length: con.lsTabOrder.length,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(left: 8.0),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        child: TabBar(
+                          isScrollable: true,
+                          labelPadding: EdgeInsets.zero,
+                          indicatorColor: Colors.transparent,
+                          dividerColor: Colors.transparent,
+                          tabAlignment: TabAlignment.start,
+                          onTap: (index) async {
+                            con.selected(index);
+                            con.loading(true);
+                            if (scrollCon.hasClients) {
+                              scrollCon.jumpTo(0);
+                            }
+                            debounce.call(() async {
+                              await con.onRefresh();
+                            });
+                          },
+                          overlayColor:
+                              const WidgetStatePropertyAll(Colors.transparent),
+                          tabs: List.generate(
+                            con.lsTabOrder.length,
+                            (index) {
+                              return Obx(
+                                () => Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 10,
+                                  ),
+                                  child: buildTabBar(
+                                    title: con.lsTabOrder[index].title,
+                                    isSelected: con.selected.value == index,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             Obx(() {
@@ -107,19 +124,21 @@ class _AdminOrderScreenState extends State<AdminOrderScreen> {
                                 controller: scrollCon,
                                 padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 15)
-                                    .copyWith(bottom: 0),
+                                    .copyWith(bottom: 20),
                                 itemBuilder: (context, index) {
                                   var item = con.listOrders[index];
                                   return buildListCard(
                                     item: item,
                                     con: con,
                                     onTap: () {
-                                      Get.to(OrderDetail(
+                                      showAlertDialog(
+                                          content: OrderDetail(
                                         data: item,
-                                      ))!
-                                          .then((value) async {
-                                        await con.onRefresh();
-                                      });
+                                      )).then(
+                                        (value) async {
+                                          await con.onRefresh();
+                                        },
+                                      );
                                     },
                                   );
                                 },
@@ -135,29 +154,29 @@ class _AdminOrderScreenState extends State<AdminOrderScreen> {
       ),
     );
   }
+}
 
-  Widget buildTabBar({
-    required String title,
-    required bool isSelected,
-    void Function()? onPressed,
-    bool ignorePointer = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6.5, horizontal: 14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: isSelected ? null : AppColor.greyBtn,
-        gradient: isSelected ? gradientBtn : null,
-      ),
-      alignment: Alignment.center,
-      child: Builder(builder: (context) {
-        return Text(
-          title,
-          style: AppText.txt15.copyWith(
-            color: AppColor.whiteColor,
-          ),
-        );
-      }),
-    );
-  }
+Widget buildTabBar({
+  required String title,
+  required bool isSelected,
+  void Function()? onPressed,
+  bool ignorePointer = false,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 6.5, horizontal: 14),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(30),
+      color: isSelected ? null : AppColor.greyBtn,
+      gradient: isSelected ? gradientBtn : null,
+    ),
+    alignment: Alignment.center,
+    child: Builder(builder: (context) {
+      return Text(
+        title,
+        style: AppText.txt15.copyWith(
+          color: AppColor.whiteColor,
+        ),
+      );
+    }),
+  );
 }

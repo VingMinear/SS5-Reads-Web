@@ -31,25 +31,28 @@ class CustomDropdownFormField extends StatelessWidget {
       fontSize: 15,
       fontWeight: FontWeight.w400,
     );
+    var border = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey.shade200),
+      borderRadius: BorderRadius.circular(6),
+    );
     return DropdownButtonFormField<Category>(
       borderRadius: BorderRadius.circular(15),
       isDense: true,
       isExpanded: false,
+      hint: Text(hint ?? ''),
       decoration: InputDecoration(
         filled: true,
-        fillColor: backgroundColor,
-        hintText: hint,
         suffixIcon: suffixIcon,
         hintStyle: hintStyle,
         label: label,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         labelText: labelText,
         isDense: true,
         labelStyle: hintStyle,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(15),
-        ),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: border,
       ),
       value: cate,
       onChanged: onChanged,

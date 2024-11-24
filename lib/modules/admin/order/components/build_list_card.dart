@@ -12,15 +12,15 @@ Widget buildListCard({
   required AdminOrderModel item,
   required AdOrderController con,
 }) {
-  return GestureDetector(
+  return InkWell(
+    borderRadius: BorderRadius.circular(12),
     onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.all(10),
+    child: Ink(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        color: AppColor.grey,
       ),
-      width: double.infinity,
       child: Builder(builder: (context) {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,

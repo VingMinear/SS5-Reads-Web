@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/address_model.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
@@ -40,168 +41,177 @@ class AddAddressScreen extends StatelessWidget {
       listTxtCon[4].text = address?.commune ?? '';
       listTxtCon[5].text = address?.house ?? '';
     }
-    return Scaffold(
-      appBar: customAppBar(
-        title: addNew ? "Add Address" : "Edit Address",
-        showNotification: false,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: shadow,
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(15),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            // GetBuilder<MapController>(
-            //   init: mapCon,
-            //   builder: (controller) {
-            //     return Stack(
-            //       children: [
-            //         Container(
-            //           clipBehavior: Clip.hardEdge,
-            //           decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius: BorderRadius.circular(15),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                 blurRadius: 12,
-            //                 color: Colors.grey.shade300,
-            //               ),
-            //             ],
-            //             border: Border.all(
-            //               width: 2,
-            //               color: Colors.white,
-            //             ),
-            //           ),
-            //           width: double.infinity,
-            //           height: appHeight() * 0.25,
-            //           child: FadeIn(
-            //             child: Stack(
-            //               children: [
-            //                 ClipRRect(
-            //                   clipBehavior: Clip.antiAlias,
-            //                   borderRadius: BorderRadius.circular(15),
-            //                   child: GoogleMap(
-            //                     markers: {controller.marker.value},
-            //                     zoomGesturesEnabled: false,
-            //                     indoorViewEnabled: false,
-            //                     rotateGesturesEnabled: false,
-            //                     scrollGesturesEnabled: false,
-            //                     trafficEnabled: false,
-            //                     onMapCreated: (map) {
-            //                       controller.smallMapController = map;
-            //                     },
-            //                     // mapToolbarEnabled: false,
-            //                     zoomControlsEnabled: false,
-            //                     compassEnabled: false,
-            //                     padding: const EdgeInsets.all(10),
-            //                     initialCameraPosition: CameraPosition(
-            //                       target: controller.latLng,
-            //                       zoom: 15,
-            //                     ),
-            //                   ),
-            //                 ),
-            //                 Positioned.fill(
-            //                   child: BackdropFilter(
-            //                     filter: ImageFilter.blur(
-            //                       sigmaX: 40,
-            //                       sigmaY: 40,
-            //                     ),
-            //                   ),
-            //                 )
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //         Positioned.fill(
-            //           child: GestureDetector(
-            //             onTap: () {
-            //               debugPrint("route");
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(
-            //                   builder: (context) => const MyGoogleMap(),
-            //                 ),
-            //               ).then((value) {
-            //                 listTxtCon[2].text =
-            //                     controller.address.province ?? '';
-            //                 listTxtCon[3].text =
-            //                     controller.address.district ?? '';
-            //                 listTxtCon[4].text =
-            //                     controller.address.commune ?? '';
-            //                 controller.moveSmallCamera(controller.latLng);
-            //               });
-            //             },
-            //           ),
-            //         )
-            //       ],
-            //     );
-            //   },
-            // ),
-            // const SizedBox(height: 15),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Receiver Information",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  buildField(
-                    title: 'Receiver Name',
-                    controller: listTxtCon[0],
-                    hintText: 'Full Name',
-                  ),
-                  buildField(
-                    title: 'Phone Number',
-                    controller: listTxtCon[1],
-                    keyboardType: TextInputType.phone,
-                    hintText: 'Your phone number',
-                  ),
-                  buildField(
-                    title: 'Provice',
-                    controller: listTxtCon[2],
-                    hintText: 'Provice',
-                  ),
-                  buildField(
-                    title: 'District',
-                    controller: listTxtCon[3],
-                    hintText: 'District',
-                  ),
-                  buildField(
-                    required: false,
-                    title: 'Commune (optional)',
-                    controller: listTxtCon[4],
-                    hintText: 'commune',
-                  ),
-                  buildField(
-                    required: false,
-                    title: 'House Name (optional)',
-                    controller: listTxtCon[5],
-                    hintText: 'House Name',
-                  ),
-                ],
-              ),
-            ),
-          ],
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Scaffold(
+        appBar: customAppBar(
+          title: addNew ? "Add Address" : "Edit Address",
+          showNotification: false,
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: CustomPrimaryButton(
-          textValue: 'Save',
-          textColor: Colors.white,
-          onPressed: () async {
-            crudAddress(listTxtCon);
-          },
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              // GetBuilder<MapController>(
+              //   init: mapCon,
+              //   builder: (controller) {
+              //     return Stack(
+              //       children: [
+              //         Container(
+              //           clipBehavior: Clip.hardEdge,
+              //           decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(15),
+              //             boxShadow: [
+              //               BoxShadow(
+              //                 blurRadius: 12,
+              //                 color: Colors.grey.shade300,
+              //               ),
+              //             ],
+              //             border: Border.all(
+              //               width: 2,
+              //               color: Colors.white,
+              //             ),
+              //           ),
+              //           width: double.infinity,
+              //           height: appHeight() * 0.25,
+              //           child: FadeIn(
+              //             child: Stack(
+              //               children: [
+              //                 ClipRRect(
+              //                   clipBehavior: Clip.antiAlias,
+              //                   borderRadius: BorderRadius.circular(15),
+              //                   child: GoogleMap(
+              //                     markers: {controller.marker.value},
+              //                     zoomGesturesEnabled: false,
+              //                     indoorViewEnabled: false,
+              //                     rotateGesturesEnabled: false,
+              //                     scrollGesturesEnabled: false,
+              //                     trafficEnabled: false,
+              //                     onMapCreated: (map) {
+              //                       controller.smallMapController = map;
+              //                     },
+              //                     // mapToolbarEnabled: false,
+              //                     zoomControlsEnabled: false,
+              //                     compassEnabled: false,
+              //                     padding: const EdgeInsets.all(10),
+              //                     initialCameraPosition: CameraPosition(
+              //                       target: controller.latLng,
+              //                       zoom: 15,
+              //                     ),
+              //                   ),
+              //                 ),
+              //                 Positioned.fill(
+              //                   child: BackdropFilter(
+              //                     filter: ImageFilter.blur(
+              //                       sigmaX: 40,
+              //                       sigmaY: 40,
+              //                     ),
+              //                   ),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //         Positioned.fill(
+              //           child: GestureDetector(
+              //             onTap: () {
+              //               debugPrint("route");
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                   builder: (context) => const MyGoogleMap(),
+              //                 ),
+              //               ).then((value) {
+              //                 listTxtCon[2].text =
+              //                     controller.address.province ?? '';
+              //                 listTxtCon[3].text =
+              //                     controller.address.district ?? '';
+              //                 listTxtCon[4].text =
+              //                     controller.address.commune ?? '';
+              //                 controller.moveSmallCamera(controller.latLng);
+              //               });
+              //             },
+              //           ),
+              //         )
+              //       ],
+              //     );
+              //   },
+              // ),
+              // const SizedBox(height: 15),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Receiver Information",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    buildField(
+                      title: 'Receiver Name',
+                      controller: listTxtCon[0],
+                      hintText: 'Full Name',
+                    ),
+                    buildField(
+                      title: 'Phone Number',
+                      controller: listTxtCon[1],
+                      keyboardType: TextInputType.phone,
+                      hintText: 'Your phone number',
+                    ),
+                    buildField(
+                      title: 'Provice',
+                      controller: listTxtCon[2],
+                      hintText: 'Provice',
+                    ),
+                    buildField(
+                      title: 'District',
+                      controller: listTxtCon[3],
+                      hintText: 'District',
+                    ),
+                    buildField(
+                      required: false,
+                      title: 'Commune (optional)',
+                      controller: listTxtCon[4],
+                      hintText: 'commune',
+                    ),
+                    buildField(
+                      required: false,
+                      title: 'House Name (optional)',
+                      controller: listTxtCon[5],
+                      hintText: 'House Name',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: CustomPrimaryButton(
+            textValue: 'Save',
+            textColor: Colors.white,
+            onPressed: () async {
+              crudAddress(listTxtCon);
+            },
+          ),
         ),
       ),
     );

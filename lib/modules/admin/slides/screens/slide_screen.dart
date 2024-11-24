@@ -1,26 +1,17 @@
-import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
-import 'package:homework3/model/image_model.dart';
 import 'package:homework3/model/imagemodel.dart';
 import 'package:homework3/model/slide_model.dart';
-import 'package:homework3/modules/admin/product/screen/adproduct_detail.dart';
+import 'package:homework3/modules/admin/product/controller/CardPhoto.dart';
 import 'package:homework3/modules/admin/slides/controller/SlideController.dart';
-import 'package:homework3/modules/profile/screens/add_address_screen.dart';
 import 'package:homework3/utils/Utilty.dart';
-import 'package:homework3/utils/api_base_helper.dart';
-import 'package:homework3/utils/image_picker.dart';
 import 'package:homework3/widgets/CustomButton.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
-import 'package:homework3/widgets/PhotoViewDetail.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:image_picker/image_picker.dart';
 
 class SlideScreen extends StatefulWidget {
   const SlideScreen({super.key});
@@ -183,115 +174,15 @@ class _SlideScreenState extends State<SlideScreen> {
                           FadeInLeft(
                             from: 5,
                             child: Obx(() {
-                              return img.image.value.isEmpty
-                                  ? GestureDetector(
-                                      onTap: () async {
-                                        dismissKeyboard(context);
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) {
-                                            return cupertinoModal(context,
-                                                (index) async {
-                                              Get.back();
-
-                                              await ImagePickerProvider()
-                                                  .pickImage(
-                                                      source: index == 0
-                                                          ? ImageSource.gallery
-                                                          : ImageSource.camera,
-                                                      updateProfile: false,
-                                                      userId: '')
-                                                  .then((value) {
-                                                if (value.isNotEmpty) {
-                                                  img = ImageModel(
-                                                    image: value.obs,
-                                                    name: "product",
-                                                    photoViewBy:
-                                                        PhotoViewBy.file,
-                                                  );
-                                                  rebuild(() {});
-                                                }
-                                              });
-                                            });
-                                          },
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 180,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          boxShadow: shadow,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          color: Colors.grey.shade100,
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: const Icon(CupertinoIcons.add),
-                                      ),
-                                    )
-                                  : GestureDetector(
-                                      onTap: () async {
-                                        Get.to(
-                                          () => PhotoViewDetail(
-                                            imageUrl: img.image.value,
-                                            viewByUrl: img.photoViewBy ==
-                                                PhotoViewBy.network,
-                                          ),
-                                        );
-                                      },
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height: 180,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              boxShadow: shadow,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: grey.withOpacity(0.4),
-                                              image: img.photoViewBy ==
-                                                      PhotoViewBy.network
-                                                  ? DecorationImage(
-                                                      image: NetworkImage(
-                                                        "$baseurl/${img.image.value}",
-                                                      ),
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : DecorationImage(
-                                                      image: FileImage(File(
-                                                        img.image.value,
-                                                      )),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                            ),
-                                            alignment: Alignment.center,
-                                          ),
-                                          Positioned(
-                                            right: 0,
-                                            top: 0,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                img = ImageModel.instance;
-                                                rebuild(() {});
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                decoration: const BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.red,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.clear,
-                                                  color: Colors.white,
-                                                  size: 12,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    );
+                              return CardPhoto(
+                                onPhotoPicker: (path) {
+                                  cate.img = ImageModel.uploadImageWeb(path!);
+                                },
+                                image: cate.img,
+                                onClear: () {
+                                  cate.img = ImageModel.instance;
+                                },
+                              );
                             }),
                           ),
                           // buildField(

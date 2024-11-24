@@ -7,8 +7,6 @@ import 'package:homework3/constants/color.dart';
 import 'package:homework3/utils/api_base_helper.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../model/user_model.dart';
-
 class PhotoViewDetail extends StatelessWidget {
   const PhotoViewDetail({
     super.key,
@@ -46,14 +44,9 @@ class PhotoViewDetail extends StatelessWidget {
                 gaplessPlayback: true,
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 5,
-                imageProvider: imageUrl.isNotEmpty
-                    ? CachedNetworkImageProvider(
-                        '$baseurl$imageUrl',
-                      )
-                    : const CachedNetworkImageProvider(
-                        defualtImage,
-                      ),
-              )
+                imageProvider: CachedNetworkImageProvider(
+                  '$baseurl$imageUrl',
+                ))
             : PhotoView(
                 gaplessPlayback: true,
                 minScale: PhotoViewComputedScale.contained,

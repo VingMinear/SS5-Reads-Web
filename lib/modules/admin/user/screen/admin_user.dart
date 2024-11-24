@@ -10,11 +10,11 @@ import 'package:homework3/modules/admin/user/screen/edit_admin_user.dart';
 import 'package:homework3/modules/auth/screens/register_screen.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/utils/style.dart';
+import 'package:homework3/widgets/CustomButton.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
 import 'package:homework3/widgets/EmptyProduct.dart';
 
 import '../../../../utils/colors.dart';
-import '../../../../widgets/custom_appbar.dart';
 
 class AdminUser extends StatefulWidget {
   const AdminUser({super.key});
@@ -48,18 +48,44 @@ class _AdminUserState extends State<AdminUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: "Users"),
-      backgroundColor: AppColor.bgScaffold,
-      resizeToAvoidBottomInset: false,
       body: Obx(
         () => Column(
           children: [
-            Padding(
+            Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: SearchBarWidget(
-                onChanged: (p0) {
-                  con.searchUser(text: p0.toString());
-                },
+              color: Colors.white,
+              child: Row(
+                children: [
+                  const Text(
+                    "Orders",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SearchBarWidget(
+                        onChanged: (p0) {
+                          con.searchUser(text: p0.toString());
+                        },
+                      ),
+                    ),
+                  ),
+                  CustomButton(
+                    onPress: () {
+                      showAlertDialog(
+                        content: const RegisterScreen(
+                          isAdmin: true,
+                        ),
+                      ).then((_) {
+                        fetchData();
+                      });
+                    },
+                    title: 'Create',
+                  )
+                ],
               ),
             ),
             Expanded(
@@ -91,248 +117,256 @@ class _AdminUserState extends State<AdminUser> {
                                     child: SlideAnimation(
                                       child: StatefulBuilder(
                                           builder: (context, state) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Get.to(EditAdminUser(
-                                              user: data,
-                                            ))!
-                                                .then((value) {
-                                              fetchData();
-                                            });
-                                          },
-                                          child: Card(
-                                            elevation: 4,
-                                            surfaceTintColor: Colors.white,
-                                            shadowColor:
-                                                Colors.grey.withOpacity(0.2),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(17),
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                            child: IntrinsicHeight(
-                                              child: Row(
-                                                children: [
-                                                  VerticalDivider(
-                                                    color: data.isActive
-                                                        ? AppColor.successColor
-                                                        : Colors.grey,
-                                                    width: 0,
-                                                    thickness: 6,
-                                                  ),
-                                                  Container(
-                                                    width: 50,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 15),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
+                                        return MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              showAlertDialog(
+                                                      content: EditAdminUser(
+                                                          user: data))
+                                                  .then((value) {
+                                                fetchData();
+                                              });
+                                            },
+                                            child: Card(
+                                              elevation: 4,
+                                              surfaceTintColor: Colors.white,
+                                              shadowColor:
+                                                  Colors.grey.withOpacity(0.2),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(17),
+                                              ),
+                                              clipBehavior: Clip.hardEdge,
+                                              child: IntrinsicHeight(
+                                                child: Row(
+                                                  children: [
+                                                    VerticalDivider(
+                                                      color: data.isActive
+                                                          ? AppColor
+                                                              .successColor
+                                                          : Colors.grey,
+                                                      width: 0,
+                                                      thickness: 6,
                                                     ),
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    height: 50,
-                                                    child:
-                                                        CustomCachedNetworkImage(
-                                                      imgUrl:
-                                                          data.photo.isNotEmpty
-                                                              ? data.photo
-                                                              : '',
+                                                    Container(
+                                                      width: 50,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 15),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      height: 50,
+                                                      child:
+                                                          CustomCachedNetworkImage(
+                                                        imgUrl: data
+                                                            .photo.image.value,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              'assets/icons/ic_user.svg',
-                                                              width: 15,
-                                                              color:
-                                                                  Colors.green,
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 5),
-                                                            Text(
-                                                              ": ${data.name}",
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize: 16,
+                                                    const SizedBox(width: 10),
+                                                    Expanded(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                'assets/icons/ic_user.svg',
+                                                                width: 15,
+                                                                color: Colors
+                                                                    .green,
                                                               ),
-                                                            ),
-                                                          ],
+                                                              const SizedBox(
+                                                                  width: 5),
+                                                              Text(
+                                                                ": ${data.name}",
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 5),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                'assets/icons/ic_mail.svg',
+                                                                width: 15,
+                                                                color: Colors
+                                                                    .blueAccent,
+                                                              ),
+                                                              const SizedBox(
+                                                                  width: 5),
+                                                              Text(
+                                                                ": ${data.email}",
+                                                                style: AppText
+                                                                    .txt13
+                                                                    .copyWith(
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontSize:
+                                                                            13.4),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                'assets/icons/ic_ph.svg',
+                                                                color: Colors
+                                                                    .blueAccent,
+                                                                width: 15,
+                                                              ),
+                                                              const SizedBox(
+                                                                  width: 5),
+                                                              Text(
+                                                                ": ${data.phone}",
+                                                                style: AppText
+                                                                    .txt13
+                                                                    .copyWith(
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontSize:
+                                                                            13.4),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        PopupMenuButton(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          color: Colors.white,
+                                                          surfaceTintColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          position:
+                                                              PopupMenuPosition
+                                                                  .under,
+                                                          offset: const Offset(
+                                                              -15, -10),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                          ),
+                                                          itemBuilder:
+                                                              (context) {
+                                                            return List
+                                                                .generate(2,
+                                                                    (index) {
+                                                              return PopupMenuItem(
+                                                                onTap:
+                                                                    () async {
+                                                                  await Future
+                                                                      .delayed(
+                                                                          Duration
+                                                                              .zero);
+                                                                  switch (
+                                                                      index) {
+                                                                    case 0:
+                                                                      showAlertDialog(content: EditAdminUser(user: data))
+                                                                          .then(
+                                                                              (value) {
+                                                                        fetchData();
+                                                                      });
+                                                                      break;
+                                                                    case 1:
+                                                                      alertDialogConfirmation(
+                                                                        title:
+                                                                            "Information",
+                                                                        desc:
+                                                                            "Are you sure you want to deleted user ?",
+                                                                        onConfirm:
+                                                                            () async {
+                                                                          Get.back();
+                                                                          con.loading(
+                                                                              true);
+                                                                          await con.removeUser(
+                                                                              userID: data.id ?? '');
+                                                                          await fetchData();
+                                                                        },
+                                                                        btnCancelColor:
+                                                                            AppColor.errorColor,
+                                                                      );
+                                                                      break;
+                                                                  }
+                                                                },
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(index ==
+                                                                            0
+                                                                        ? "Edit"
+                                                                        : "Delete"),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      index == 0
+                                                                          ? "assets/icons/order/ic_pen.svg"
+                                                                          : "assets/icons/order/ic_delete.svg",
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                            CupertinoIcons
+                                                                .ellipsis_vertical,
+                                                            color: Colors.black,
+                                                            size: 15,
+                                                          ),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              'assets/icons/ic_mail.svg',
-                                                              width: 15,
-                                                              color: Colors
-                                                                  .blueAccent,
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 5),
-                                                            Text(
-                                                              ": ${data.email}",
-                                                              style: AppText
-                                                                  .txt13
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .black54,
-                                                                      fontSize:
-                                                                          13.4),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              'assets/icons/ic_ph.svg',
-                                                              color: Colors
-                                                                  .blueAccent,
-                                                              width: 15,
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 5),
-                                                            Text(
-                                                              ": ${data.phone}",
-                                                              style: AppText
-                                                                  .txt13
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .black54,
-                                                                      fontSize:
-                                                                          13.4),
-                                                            ),
-                                                          ],
+                                                        Transform.scale(
+                                                          scale: 0.8,
+                                                          child:
+                                                              CupertinoSwitch(
+                                                            value:
+                                                                data.isActive,
+                                                            onChanged:
+                                                                (value) async {
+                                                              data.isActive =
+                                                                  value;
+                                                              state(() {});
+                                                              loadingDialog();
+                                                              await con
+                                                                  .enableUser(
+                                                                user: data,
+                                                                enable: data
+                                                                    .isActive,
+                                                              );
+                                                              popLoadingDialog();
+                                                            },
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      PopupMenuButton(
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        color: Colors.white,
-                                                        surfaceTintColor:
-                                                            Colors.transparent,
-                                                        position:
-                                                            PopupMenuPosition
-                                                                .under,
-                                                        offset: const Offset(
-                                                            -15, -10),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return List.generate(
-                                                              2, (index) {
-                                                            return PopupMenuItem(
-                                                              onTap: () async {
-                                                                await Future
-                                                                    .delayed(
-                                                                        Duration
-                                                                            .zero);
-                                                                switch (index) {
-                                                                  case 0:
-                                                                    Get.to(() {
-                                                                      return EditAdminUser(
-                                                                          user:
-                                                                              data);
-                                                                    });
-                                                                    break;
-                                                                  case 1:
-                                                                    alertDialogConfirmation(
-                                                                      title:
-                                                                          "Information",
-                                                                      desc:
-                                                                          "Are you sure you want to deleted user ?",
-                                                                      onConfirm:
-                                                                          () async {
-                                                                        Get.back();
-                                                                        con.loading(
-                                                                            true);
-                                                                        await con.removeUser(
-                                                                            userID:
-                                                                                data.id ?? '');
-                                                                        await fetchData();
-                                                                      },
-                                                                      btnCancelColor:
-                                                                          AppColor
-                                                                              .errorColor,
-                                                                    );
-                                                                    break;
-                                                                }
-                                                              },
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(index ==
-                                                                          0
-                                                                      ? "Edit"
-                                                                      : "Delete"),
-                                                                  SvgPicture
-                                                                      .asset(
-                                                                    index == 0
-                                                                        ? "assets/icons/order/ic_pen.svg"
-                                                                        : "assets/icons/order/ic_delete.svg",
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            );
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                          CupertinoIcons
-                                                              .ellipsis_vertical,
-                                                          color: Colors.black,
-                                                          size: 15,
-                                                        ),
-                                                      ),
-                                                      Transform.scale(
-                                                        scale: 0.8,
-                                                        child: CupertinoSwitch(
-                                                          value: data.isActive,
-                                                          onChanged:
-                                                              (value) async {
-                                                            data.isActive =
-                                                                value;
-                                                            state(() {});
-                                                            loadingDialog();
-                                                            await con
-                                                                .enableUser(
-                                                              user: data,
-                                                              enable:
-                                                                  data.isActive,
-                                                            );
-                                                            popLoadingDialog();
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -350,25 +384,6 @@ class _AdminUserState extends State<AdminUser> {
               ),
             ),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(const RegisterScreen(
-            isAdmin: true,
-          ))!
-              .then((value) {
-            fetchData();
-          });
-        },
-        heroTag: "",
-        elevation: 1,
-        tooltip: "Add Product",
-        backgroundColor: Colors.black.withOpacity(0.45),
-        shape: CircleBorder(side: BorderSide(color: AppColor.whiteColor)),
-        child: SvgPicture.asset(
-          'assets/icons/ic_add.svg',
-          width: 20,
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
 
@@ -39,14 +40,7 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   void initState() {
-    marker = Marker(
-      icon: appMarker,
-      markerId: const MarkerId("marker"),
-      position: con.orderDetail.value.latLng ??
-          const LatLng(11.569563004287103, 104.90264560955421),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await customMarkerIcon();
       await con.fetchOrderDetail(widget.data.orderId);
       loading(false);
     });
@@ -55,27 +49,14 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   BitmapDescriptor appMarker = BitmapDescriptor.defaultMarker;
-  customMarkerIcon() async {
-    Uint8List icon = await MapController().getBytesFromAsset(
-      'assets/icons/pin.png',
-      100,
-    );
-    appMarker = BitmapDescriptor.fromBytes(icon);
-    marker = Marker(
-      icon: appMarker,
-      markerId: const MarkerId("marker"),
-      position: con.orderDetail.value.latLng ??
-          const LatLng(11.569563004287103, 104.90264560955421),
-    );
-    setState(() {});
-  }
 
   var con = Get.put(AdOrderController());
-  GoogleMapController? mapCon;
+
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
+    return GetX<AdOrderController>(
+      init: AdOrderController(),
+      builder: (con) => Scaffold(
         appBar: customAppBar(
           title: "Order Detail",
           onPress: () {
@@ -89,40 +70,6 @@ class _OrderDetailState extends State<OrderDetail> {
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    Container(
-                      decoration: cardDecoration(),
-                      width: double.infinity,
-                      height: appHeight(percent: 0.3),
-                      child: Offstage(
-                        offstage: !mapShow.value,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: GoogleMap(
-                            markers: {marker},
-                            myLocationEnabled: true,
-                            mapType: MapType.normal,
-                            zoomGesturesEnabled: true,
-                            indoorViewEnabled: true,
-                            rotateGesturesEnabled: true,
-                            scrollGesturesEnabled: true,
-                            trafficEnabled: false,
-                            onMapCreated: (map) {
-                              mapCon = map;
-                            },
-                            // mapToolbarEnabled: false,
-                            zoomControlsEnabled: false,
-                            compassEnabled: true,
-                            padding: const EdgeInsets.all(10),
-                            initialCameraPosition: CameraPosition(
-                              target: con.orderDetail.value.latLng ??
-                                  const LatLng(
-                                      11.569563004287103, 104.90264560955421),
-                              zoom: 15,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 20),
                     cardAddress(con.orderDetail.value),
                     const SizedBox(height: 20),
@@ -200,7 +147,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   showDialogReject();
                 },
                 textStyle: btnTextStyle(
-                  color: AppColor.black,
+                  color: Colors.white,
                 ),
                 title: status == OrderStatus.processing
                     ? 'Cancel'
@@ -324,7 +271,7 @@ class _OrderDetailState extends State<OrderDetail> {
       onConfirm: () async {
         if (reasonCon != null) {
           if (reasonCon!.trim().isNotEmpty) {
-            Get.back();
+            router.pop();
             loading(true);
             await con.updateOrder(
               ordID: widget.data.orderId,
@@ -394,8 +341,8 @@ class _OrderDetailState extends State<OrderDetail> {
                   Row(
                     children: [
                       Container(
-                        width: appWidth() * 0.15,
-                        height: appWidth() * 0.15,
+                        width: 80,
+                        height: 100,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
@@ -433,7 +380,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.8),
                           fontWeight: FontWeight.w600,
-                          fontSize: appWidth() * 0.04,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -492,7 +439,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   child: Row(
                     children: [
                       Text(item.receiverName),
-                      const Text(' ● '),
+                      const Text(' . '),
                       Text(
                         (item.phoneNumber.toString()),
                         style: AppText.txt14.copyWith(
