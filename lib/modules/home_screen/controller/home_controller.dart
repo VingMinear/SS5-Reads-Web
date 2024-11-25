@@ -6,16 +6,13 @@ import 'package:homework3/model/slide_model.dart';
 import '../../../utils/api_base_helper.dart';
 
 class HomeController extends GetxController {
-  @override
-  void onInit() {
-    fetchslides();
-    super.onInit();
-  }
-
   var slidesBanner = <SlideModel>[].obs;
   final _apiBaseHelper = ApiBaseHelper();
-  Future<void> fetchslides() async {
+  var loading = false.obs;
+  Future<List<SlideModel>> fetchslides() async {
     try {
+      loading(true);
+      slidesBanner.clear();
       await _apiBaseHelper.onNetworkRequesting(
         url: 'slides',
         methode: METHODE.post,
@@ -32,5 +29,8 @@ class HomeController extends GetxController {
         'CatchError while fetchslides ( error message ) : >> $error',
       );
     }
+    loading(false);
+
+    return slidesBanner;
   }
 }

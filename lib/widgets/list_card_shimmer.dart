@@ -24,8 +24,8 @@ class ListShimmer extends StatelessWidget {
             Row(
               children: [
                 line(
-                  width: height ?? 100,
-                  height: height ?? 100,
+                  width: height ?? 80,
+                  height: height ?? 80,
                   raduis: 10,
                 ),
                 const SizedBox(width: 20),
@@ -48,22 +48,16 @@ class ListShimmer extends StatelessWidget {
             Positioned(
               right: 0,
               bottom: 0,
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: mainColor,
-                    shape: BoxShape.circle,
-                    boxShadow: [],
-                  ),
-                  width: 45,
-                  height: 45,
-                  padding: const EdgeInsets.all(12),
-                  child: Image.asset(
-                    'images/cart.png',
-                    width: 13,
-                    color: Colors.white,
-                  ),
+              child: Container(
+                decoration: const BoxDecoration(),
+                width: 45,
+                height: 45,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                padding: const EdgeInsets.all(12),
+                child: Image.asset(
+                  'images/cart.png',
+                  width: 13,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -80,7 +74,7 @@ Container line({
   double? raduis,
 }) {
   return Container(
-    width: width ?? 170,
+    width: width ?? 150,
     height: height ?? 14,
     decoration: BoxDecoration(
       color: Colors.white,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/product_model.dart';
 import 'package:homework3/routes/routes.dart';
+import 'package:homework3/utils/colors.dart';
 
 import '../../../widgets/CustomCachedNetworkImage.dart';
 import '../../cart/controllers/cart_controller.dart';
@@ -32,13 +33,14 @@ class _CartWidgetState extends State<CardFavorite>
           '/product-detail?pId=${widget.product.productId}&cateId=${widget.product.categoryId}',
         );
       },
+      borderRadius: BorderRadius.circular(15),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: const Color(0xffFEFEFE),
-          boxShadow: shadow,
+          boxShadow: AppColor.boxShadow,
         ),
         child: Stack(
           children: [

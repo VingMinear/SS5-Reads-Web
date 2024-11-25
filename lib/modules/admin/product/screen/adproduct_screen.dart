@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
-import 'package:go_router/go_router.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/category.dart';
 import 'package:homework3/modules/admin/order/screens/admin_order_screen.dart';
 import 'package:homework3/modules/admin/product/screen/adproduct_detail.dart';
 import 'package:homework3/modules/home_screen/components/mainbody.dart';
-import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/CustomButton.dart';
 
@@ -29,7 +27,7 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
 
   int pageNum = 0;
 
-  var loading = false.obs;
+  var loading = true.obs;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -77,7 +75,7 @@ class _AdminProductScreenState extends State<AdminProductScreen> {
                   child: Row(
                     children: [
                       const Text(
-                        "Orders",
+                        "Products",
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:homework3/model/product_model.dart';
+import 'package:homework3/modules/home_screen/components/footer.dart';
 import 'package:homework3/modules/home_screen/controller/product_controller.dart';
+import 'package:homework3/utils/Utilty.dart';
+import 'package:homework3/widgets/CustomNoContent.dart';
 import 'package:homework3/widgets/EmptyProduct.dart';
-import 'package:homework3/widgets/custom_appbar.dart';
 import 'package:homework3/widgets/list_card_shimmer.dart';
 
 import '../../bottom_navigation_bar/main_layout.dart';
@@ -25,16 +27,9 @@ class ListProducts extends StatefulWidget {
 }
 
 class _ListProductsState extends State<ListProducts> {
-  final loading = false.obs;
+  final loading = true.obs;
   List<ProductModel> listProducts = [];
   final con = Get.put(ProductController());
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      getProducts();
-    });
-    super.initState();
-  }
 
   Future<void> getProducts() async {
     try {
@@ -66,62 +61,79 @@ class _ListProductsState extends State<ListProducts> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getProducts();
+    });
+
     return Obx(
       () => Scaffold(
-        // appBar: widget.searchText != null
-        //     ? txtFiedl()
-        //     : customAppBar(
-        //         title: widget.title,
-        //         showNotification: false,
-        //         action: GestureDetector(
-        //           onTap: () {
-        //             Get.to(const CartScreen(
-        //               back: true,
-        //             ));
-        //           },
-        //           child: cartIcon(
-        //             Colors.black54,
-        //           ),
-        //         ),
-        //         spaceLeft: 15,
-        //       ),
         body: loading.value
             ? AnimationLimiter(
-                child: ListView.separated(
-                  itemCount: 4,
-                  padding: const EdgeInsets.only(
-                      top: 20, bottom: 20, left: 15, right: 15),
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) =>
-                      AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 600),
-                    child: const FadeInAnimation(
-                      duration: Duration(milliseconds: 200),
-                      child: SizedBox(
-                        child: ListShimmer(
-                          height: 80,
+                child: LayoutBuilder(builder: (context, box) {
+                  return GridView.builder(
+                    itemCount: 4,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: gridCount(box.maxWidth),
+                      mainAxisExtent: 140,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(20),
+                    itemBuilder: (context, index) =>
+                        AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 600),
+                      child: const FadeInAnimation(
+                        duration: Duration(milliseconds: 200),
+                        child: SizedBox(
+                          child: ListShimmer(
+                            height: 80,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 20),
-                ),
+                  );
+                }),
               )
-            : Column(
-                children: [
-                  Expanded(
-                    child: AnimationLimiter(
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text(
+                        widget.searchText == null
+                            ? 'List all products'
+                            : 'Result for " ${widget.searchText} "',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 25,
+                      color: Colors.grey.shade300,
+                    ),
+                    AnimationLimiter(
                       child: RefreshIndicator(
                         onRefresh: () async {
                           await getProducts();
                         },
                         child: listProducts.isEmpty
-                            ? const EmptyProduct(
-                                desc: 'No product found in stocks')
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                    top: appHeight(percent: 0.2)),
+                                child: const EmptyProduct(
+                                  desc: 'No product found',
+                                ),
+                              )
                             : LayoutBuilder(builder: (context, box) {
                                 return GridView.builder(
+                                  shrinkWrap: true,
+
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: gridCount(box.maxWidth),
@@ -130,10 +142,8 @@ class _ListProductsState extends State<ListProducts> {
                                     mainAxisSpacing: 12,
                                   ),
                                   itemCount: listProducts.length,
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.only(
-                                      top: 20, bottom: 20),
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: const EdgeInsets.all(20),
                                   itemBuilder: (context, index) =>
                                       AnimationConfiguration.staggeredList(
                                     position: index,
@@ -141,12 +151,8 @@ class _ListProductsState extends State<ListProducts> {
                                     child: FadeInAnimation(
                                       duration:
                                           const Duration(milliseconds: 600),
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CardListProduct(
-                                          product: listProducts[index],
-                                        ),
+                                      child: CardListProduct(
+                                        product: listProducts[index],
                                       ),
                                     ),
                                   ),
@@ -156,8 +162,8 @@ class _ListProductsState extends State<ListProducts> {
                               }),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
       ),
     );

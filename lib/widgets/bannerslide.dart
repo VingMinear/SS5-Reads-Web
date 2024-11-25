@@ -4,39 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/slide_model.dart';
+import 'package:homework3/modules/home_screen/controller/home_controller.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../modules/home_screen/controller/product_controller.dart';
-
 class MyBanner extends StatefulWidget {
-  const MyBanner({super.key, required this.banner});
-  final List<SlideModel> banner;
+  const MyBanner({super.key});
+
   @override
   State<MyBanner> createState() => _MyBannerState();
 }
 
 class _MyBannerState extends State<MyBanner> {
-  late final PageController pageController;
-
   int pageNum = 0;
+  var con = Get.put(HomeController());
   @override
   void initState() {
-    pageController = PageController(
-      initialPage: 1,
-      //viewportFraction: 0.92,
-    );
+    con.fetchslides();
     super.initState();
   }
 
-  var conPro = Get.put(ProductController());
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Column(
+    return Obx(() {
+      return Column(
         children: [
-          conPro.loadingNewCollection.value
+          con.loading.value
               ? FadeInDown(
                   from: 10,
                   child: CarouselSlider.builder(
@@ -72,7 +66,7 @@ class _MyBannerState extends State<MyBanner> {
                     },
                   ),
                 )
-              : widget.banner.isEmpty
+              : con.slidesBanner.isEmpty
                   ? Container(
                       height: 400,
                       width: double.infinity,
@@ -84,7 +78,7 @@ class _MyBannerState extends State<MyBanner> {
                   : FadeInDown(
                       from: 10,
                       child: CarouselSlider.builder(
-                        itemCount: widget.banner.length,
+                        itemCount: con.slidesBanner.length,
                         options: CarouselOptions(
                           onPageChanged: (index, reason) {
                             setState(() {
@@ -96,7 +90,7 @@ class _MyBannerState extends State<MyBanner> {
                           autoPlay: true,
                         ),
                         itemBuilder: (context, index, realIndex) {
-                          var banner = widget.banner[index];
+                          var slide = con.slidesBanner[index];
                           return Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -111,7 +105,7 @@ class _MyBannerState extends State<MyBanner> {
                             ),
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: CustomCachedNetworkImage(
-                              imgUrl: banner.img.image.value,
+                              imgUrl: slide.img.image.value,
                             ),
                           );
                         },
@@ -120,10 +114,10 @@ class _MyBannerState extends State<MyBanner> {
           const SizedBox(
             height: 10,
           ),
-          if (widget.banner.isNotEmpty)
+          if (con.slidesBanner.isNotEmpty)
             AnimatedSmoothIndicator(
               activeIndex: pageNum,
-              count: widget.banner.length,
+              count: con.slidesBanner.length,
               effect: WormEffect(
                 dotWidth: 10,
                 dotHeight: 10,
@@ -132,7 +126,7 @@ class _MyBannerState extends State<MyBanner> {
               ),
             )
         ],
-      ),
-    );
+      );
+    });
   }
 }

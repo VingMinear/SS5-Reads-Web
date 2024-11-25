@@ -1,16 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:homework3/modules/auth/screens/change_pwd.dart';
 import 'package:homework3/modules/profile/components/header.dart';
-import 'package:homework3/modules/profile/screens/edit_profile_screen.dart';
 import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/custom_overlay.dart';
 
 import 'address_screen.dart';
-import 'contact_us.dart';
-import 'order_screen.dart';
 
 typedef ProfileOptionTap = void Function();
 
@@ -56,6 +52,8 @@ class _ProfileState extends State<Profile> {
         ProfileOption.arrow(title: 'Order', icon: _profileIcon('order.png')),
         ProfileOption.arrow(
             title: 'Address', icon: _profileIcon('location@2x.png')),
+        ProfileOption.arrow(
+            title: 'Change Password', icon: _profileIcon('lock@2x.png')),
         ProfileOption(
           title: 'Logout',
           icon: _profileIcon('logout@2x.png'),
@@ -133,6 +131,11 @@ class _ProfileState extends State<Profile> {
           case 2:
             showAlertDialog(
               content: AddressScreen(),
+            );
+            break;
+          case 3:
+            showAlertDialog(
+              content: const ChangePwdScreen(),
             );
             break;
           default:

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:homework3/utils/Log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:homework3/modules/cart/screens/success_order.dart';
 import 'package:homework3/utils/ReponseApiHandler.dart';
@@ -21,6 +22,33 @@ class CartController extends GetxController {
   void onInit() {
     super.onInit();
     loadCartFromStorage();
+  }
+
+  calculateAmount(double amount) {
+    final calculatedAmount = (amount * 100).round();
+    return calculatedAmount
+        .toString(); // Return as string to match Stripe's expected format
+  }
+
+  Future<String> createPayment({required double total}) async {
+    var url = '';
+    try {
+      var res = await _apiBaseHelper.onNetworkRequesting(
+        url: 'create-checkout-session',
+        body: {
+          "amount": calculateAmount(total),
+        },
+        methode: METHODE.post,
+      );
+      if (res['url'] != null) {
+        url = res['url'] ?? '';
+      }
+    } catch (error) {
+      Log.error(
+        'CatchError while createPayment ( error message ) : >> $error',
+      );
+    }
+    return url;
   }
 
   // Save cart to local storage

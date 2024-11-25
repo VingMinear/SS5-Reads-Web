@@ -241,6 +241,7 @@ void logOut() async {
 Future showAlertDialog({
   BuildContext? context,
   required Widget content,
+  double? maxWidth,
   Color? barrierColor,
 }) async {
   return await showDialog(
@@ -250,7 +251,7 @@ Future showAlertDialog({
       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
       child: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: BreakPoint.sm),
+          constraints: BoxConstraints(maxWidth: maxWidth ?? BreakPoint.sm),
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),

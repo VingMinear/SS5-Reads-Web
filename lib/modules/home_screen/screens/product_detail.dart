@@ -13,13 +13,11 @@ import 'package:homework3/modules/home_screen/controller/product_controller.dart
 import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/SingleTon.dart';
 import 'package:homework3/widgets/product_card.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../utils/Utilty.dart';
 import '../../../widgets/CustomCachedNetworkImage.dart';
-import '../../../widgets/grid_card_shimmer.dart';
-import '../../bottom_navigation_bar/main_layout.dart';
 import '../../cart/models/cart_model.dart';
-import '../../cart/screens/cart_screen.dart';
 
 class ProductDetailsView extends StatefulWidget {
   const ProductDetailsView({
@@ -334,16 +332,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   _showTaost(bool isFav) {
-    Fluttertoast.showToast(
-      msg: isFav
-          ? "Favorites has been removed"
-          : "Added to Favorites successfully",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.grey.withOpacity(0.59),
-      textColor: whiteColor,
-      fontSize: 15.0,
+    showTaost(
+      isFav ? "Favorites has been removed" : "Added to Favorites successfully",
+      type: isFav ? ToastificationType.error : null,
     );
   }
 
@@ -375,8 +366,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 if (GlobalClass().isUserLogin) {
                   var total = productDetail.priceOut! + cartCon.shippingCharge;
                   var subTotal = productDetail.priceOut!;
-                  Get.to(
-                    () => CheckOutScreen(
+                  showAlertDialog(
+                    content: CheckOutScreen(
                       listPro: [
                         CartModel(
                           product: productDetail,

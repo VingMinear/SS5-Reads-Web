@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/address_model.dart';
 import 'package:homework3/utils/Utilty.dart';

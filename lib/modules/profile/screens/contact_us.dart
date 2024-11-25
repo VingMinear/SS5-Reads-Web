@@ -16,8 +16,6 @@ class ContactUsScreen extends StatefulWidget {
 }
 
 class _ContactUsScreenState extends State<ContactUsScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   // // Stream method to get a single "Contact Us" document from Firestore
   // Stream<ContactUs> _getContactUs() {
   //   return _firestore

@@ -15,13 +15,11 @@ class ImageModel {
       ImageModel(image: ''.obs, name: '', photoViewBy: PhotoViewBy.file);
   ImageModel(
       {required this.image, required this.name, required this.photoViewBy});
-  ImageModel copy(ImageModel model) {
-    return ImageModel(
-      image: model.image,
-      name: model.name,
-      photoViewBy: model.photoViewBy,
-    );
-  }
+  ImageModel.copy(ImageModel model)
+      : image = RxString(model.image.value),
+        bytes = model.bytes,
+        name = model.name,
+        photoViewBy = model.photoViewBy;
 
   ImageModel.fromNetwork(String img) {
     image(img);

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/product_model.dart';
 import 'package:homework3/modules/admin/product/controller/CardPhoto.dart';
@@ -96,247 +95,257 @@ class _AdminProductDetailState extends State<AdminProductDetail> {
         onPopInvoked: (didPop) {
           Get.put(AdminProductController()).fetchProduct();
         },
-        child: Scaffold(
-          appBar: customAppBar(
-            title: widget.isEdit ? 'Edit Product' : "Create Product",
-            backgroundColor: Colors.white,
-            elevation: 1,
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: shadow,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
           ),
-          backgroundColor: Colors.white,
-          resizeToAvoidBottomInset: false,
-          body: loading.value
-              ? const Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: mainColor,
-                  ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      __buildField(
-                        controller: txtProNameCon,
-                        title: 'Product name',
-                        hintText: 'Product name',
-                      ),
-                      FadeInLeft(
-                        from: 10,
-                        child: const Row(
+          clipBehavior: Clip.antiAlias,
+          child: Scaffold(
+            appBar: customAppBar(
+              title: widget.isEdit ? 'Edit Product' : "Create Product",
+              backgroundColor: Colors.white,
+              elevation: 1,
+            ),
+            backgroundColor: Colors.white,
+            resizeToAvoidBottomInset: false,
+            body: loading.value
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: mainColor,
+                    ),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        __buildField(
+                          controller: txtProNameCon,
+                          title: 'Product name',
+                          hintText: 'Product name',
+                        ),
+                        FadeInLeft(
+                          from: 10,
+                          child: const Row(
+                            children: [
+                              Text('Category'),
+                              Text(
+                                " *",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        FadeInLeft(
+                          from: 5,
+                          child: CustomDropdownFormField(
+                            onChanged: (value) {
+                              cate = value!;
+                            },
+                            cate: cate,
+                            list: listCategory,
+                            hint: 'Category',
+                            backgroundColor: grey.withOpacity(0.4),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
                           children: [
-                            Text('Category'),
-                            Text(
-                              " *",
-                              style: TextStyle(color: Colors.red),
+                            Expanded(
+                              child: __buildField(
+                                controller: txtPricein,
+                                title: 'Price In',
+                                hintText: 'Price In',
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [],
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: __buildField(
+                                controller: txtPriceOut,
+                                title: 'Price Out',
+                                hintText: 'Price Out',
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      FadeInLeft(
-                        from: 5,
-                        child: CustomDropdownFormField(
-                          onChanged: (value) {
-                            cate = value!;
-                          },
-                          cate: cate,
-                          list: listCategory,
-                          hint: 'Category',
-                          backgroundColor: grey.withOpacity(0.4),
+                        Row(
+                          children: [
+                            FadeInLeft(
+                              from: 10,
+                              child: const Text("Description"),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: __buildField(
-                              controller: txtPricein,
-                              title: 'Price In',
-                              hintText: 'Price In',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [],
-                            ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          minLines: 2,
+                          maxLines: 5,
+                          controller: txtDesc,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            hintText: 'describe your product',
+                            hintStyle: hintStyle(),
+                            border: border,
+                            enabledBorder: border,
+                            focusedBorder: border,
                           ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            child: __buildField(
-                              controller: txtPriceOut,
-                              title: 'Price Out',
-                              hintText: 'Price Out',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          FadeInLeft(
-                            from: 10,
-                            child: const Text("Description"),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        minLines: 2,
-                        maxLines: 5,
-                        controller: txtDesc,
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                          hintText: 'describe your product',
-                          hintStyle: hintStyle(),
-                          border: border,
-                          enabledBorder: border,
-                          focusedBorder: border,
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          FadeInLeft(
-                            from: 5,
-                            child: Obx(() {
-                              return CardPhoto(
-                                image: imageAsset.value,
-                                onClear: () {
-                                  imageAsset(ImageModel.instance);
-                                },
-                                onPhotoPicker: (file) {
-                                  imageAsset(ImageModel.uploadImageWeb(file!));
-                                },
-                              );
-                            }),
-                          ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                __buildField(
-                                  controller: txtQty,
-                                  title: 'Qty',
-                                  hintText: 'Qty',
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [],
-                                ),
-                              ],
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            FadeInLeft(
+                              from: 5,
+                              child: Obx(() {
+                                return CardPhoto(
+                                  image: imageAsset.value,
+                                  onClear: () {
+                                    imageAsset(ImageModel.instance);
+                                  },
+                                  onPhotoPicker: (file) {
+                                    imageAsset(
+                                        ImageModel.uploadImageWeb(file!));
+                                  },
+                                );
+                              }),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  __buildField(
+                                    controller: txtQty,
+                                    title: 'Qty',
+                                    hintText: 'Qty',
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-          floatingActionButton: loading.value
-              ? null
-              : widget.isEdit
-                  ? FloatingActionButton(
-                      onPressed: () {
-                        alertDialogConfirmation(
-                          title: 'Information',
-                          desc: 'Are you sure you want to delete this product ?'
-                              .tr, //You want to delete this product ?
-                          onConfirm: () async {
-                            router.pop();
-                            loadingDialog();
-                            await proCon
-                                .deleteProduct(pid: widget.pId)
-                                .then((value) {
-                              if (value) {
-                                showTaost(
-                                    'Product has been deleted successfully✅');
-                                router.pop();
-                              }
-                            });
-                            popLoadingDialog();
-                          },
-                          txtBtnCfn: 'Confirm',
-                        );
-                      },
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      backgroundColor: Colors.red.shade600,
-                      child: const Icon(Iconsax.trash),
-                    )
-                  : null,
-          bottomNavigationBar: loading.value
-              ? null
-              : Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: CustomButton(
-                          borderSide: BorderSide(color: Colors.red.shade600),
-                          backgroundColor: Colors.red.shade600,
-                          textStyle: context.textTheme.bodyLarge!
-                              .copyWith(color: Colors.white),
-                          title: 'Clear'.tr,
-                          onPress: () {
-                            onReset();
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: CustomButton(
-                          borderSide: const BorderSide(color: mainColor),
-                          title: widget.isEdit ? 'Save' : 'Add',
-                          textStyle: context.textTheme.bodyLarge!
-                              .copyWith(color: Colors.white),
-                          onPress: () async {
-                            var proName = txtProNameCon.text.trim();
-                            var priceIn = txtPricein.text.trim();
-                            var priceout = txtPriceOut.text.trim();
-                            var qty = txtQty.text.trim();
-                            if (proName.isNotEmpty &&
-                                priceIn.isNotEmpty &&
-                                priceout.isNotEmpty &&
-                                qty.isNotEmpty &&
-                                cate != null) {
-                              if (double.parse(priceIn) != 0.0 &&
-                                  double.parse(priceout) != 0.0) {
-                                loadingDialog();
-                                if (widget.isEdit) {
-                                  await proCon.updateProduct(
-                                    pid: widget.pId,
-                                    desc: txtDesc.text,
-                                    pname: proName,
-                                    priceIn: double.parse(priceIn),
-                                    priceout: double.parse(priceout),
-                                    qty: int.parse(qty),
-                                    image: imageAsset.value,
-                                    categoryId: cate?.id ?? 0,
-                                  );
-                                } else {
-                                  await proCon.addProduct(
-                                    pname: proName,
-                                    desc: txtDesc.text,
-                                    priceIn: double.parse(priceIn),
-                                    priceout: double.parse(priceout),
-                                    qty: int.parse(qty),
-                                    image: imageAsset.value,
-                                    categoryId: cate?.id ?? 0,
-                                  );
+            floatingActionButton: loading.value
+                ? null
+                : widget.isEdit
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          alertDialogConfirmation(
+                            title: 'Information',
+                            desc:
+                                'Are you sure you want to delete this product ?'
+                                    .tr, //You want to delete this product ?
+                            onConfirm: () async {
+                              router.pop();
+                              loadingDialog();
+                              await proCon
+                                  .deleteProduct(pid: widget.pId)
+                                  .then((value) {
+                                if (value) {
+                                  showTaost(
+                                      'Product has been deleted successfully✅');
+                                  router.pop();
                                 }
-                                popLoadingDialog();
-                                router.pop();
-                              } else {
-                                alertDialog(desc: 'Invalid Input Price');
-                              }
-                            } else {
-                              alertDialog(
-                                  desc: 'Please input all required field');
-                            }
-                          },
+                              });
+                              popLoadingDialog();
+                            },
+                            txtBtnCfn: 'Confirm',
+                          );
+                        },
+                        elevation: 4,
+                        shape: const CircleBorder(),
+                        backgroundColor: Colors.red.shade600,
+                        child: const Icon(Iconsax.trash),
+                      )
+                    : null,
+            bottomNavigationBar: loading.value
+                ? null
+                : Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            borderSide: BorderSide(color: Colors.red.shade600),
+                            backgroundColor: Colors.red.shade600,
+                            textStyle: context.textTheme.bodyLarge!
+                                .copyWith(color: Colors.white),
+                            title: 'Clear'.tr,
+                            onPress: () {
+                              onReset();
+                              setState(() {});
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: CustomButton(
+                            borderSide: const BorderSide(color: mainColor),
+                            title: widget.isEdit ? 'Save' : 'Add',
+                            textStyle: context.textTheme.bodyLarge!
+                                .copyWith(color: Colors.white),
+                            onPress: () async {
+                              var proName = txtProNameCon.text.trim();
+                              var priceIn = txtPricein.text.trim();
+                              var priceout = txtPriceOut.text.trim();
+                              var qty = txtQty.text.trim();
+                              if (proName.isNotEmpty &&
+                                  priceIn.isNotEmpty &&
+                                  priceout.isNotEmpty &&
+                                  qty.isNotEmpty &&
+                                  cate != null) {
+                                if (double.parse(priceIn) != 0.0 &&
+                                    double.parse(priceout) != 0.0) {
+                                  loadingDialog();
+                                  if (widget.isEdit) {
+                                    await proCon.updateProduct(
+                                      pid: widget.pId,
+                                      desc: txtDesc.text,
+                                      pname: proName,
+                                      priceIn: double.parse(priceIn),
+                                      priceout: double.parse(priceout),
+                                      qty: int.parse(qty),
+                                      image: imageAsset.value,
+                                      categoryId: cate?.id ?? 0,
+                                    );
+                                  } else {
+                                    await proCon.addProduct(
+                                      pname: proName,
+                                      desc: txtDesc.text,
+                                      priceIn: double.parse(priceIn),
+                                      priceout: double.parse(priceout),
+                                      qty: int.parse(qty),
+                                      image: imageAsset.value,
+                                      categoryId: cate?.id ?? 0,
+                                    );
+                                  }
+                                  popLoadingDialog();
+                                  router.pop();
+                                } else {
+                                  alertDialog(desc: 'Invalid Input Price');
+                                }
+                              } else {
+                                alertDialog(
+                                    desc: 'Please input all required field');
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+          ),
         ),
       ),
     );

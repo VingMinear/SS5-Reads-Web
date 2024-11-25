@@ -1,6 +1,5 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/image_model.dart';
 import 'package:homework3/model/imagemodel.dart';
 import 'package:homework3/utils/NumExtension.dart';
@@ -30,6 +29,7 @@ class CardPhoto extends StatelessWidget {
                 path = await UploadImageWeb().singleImage();
                 onPhotoPicker(path);
               },
+        borderRadius: BorderRadius.circular(8),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),

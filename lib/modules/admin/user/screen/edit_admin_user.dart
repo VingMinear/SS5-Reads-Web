@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/constants/color.dart';
+import 'package:homework3/model/image_model.dart';
 import 'package:homework3/model/imagemodel.dart';
 import 'package:homework3/model/user_model.dart';
 import 'package:homework3/modules/admin/product/controller/CardPhoto.dart';
+import 'package:homework3/modules/admin/product/controller/adproduct_con.dart';
 import 'package:homework3/modules/profile/screens/add_address_screen.dart';
 import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/ReponseApiHandler.dart';
@@ -46,172 +49,181 @@ class _EditAdminUserState extends State<EditAdminUser> {
   static var listType = ["Admin", "Customer"];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(
-        title: 'Edit User',
-        showNotification: false,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: shadow,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
       ),
-      body: Obx(
-        () => ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                children: [
-                  FadeIn(
-                    child: CardPhoto(
-                      image: user.value.photo,
-                      onPhotoPicker: (path) {
-                        user.value.photo = ImageModel.uploadImageWeb(path!);
-                        setState(() {});
-                      },
-                      onClear: () {
-                        user.value.photo = ImageModel.instance;
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Tap to update profile user here.")
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildField(
-                          title: 'Name :',
-                          hintText: 'Name',
-                          required: false,
-                          controller: nameCon,
-                        ),
+      clipBehavior: Clip.antiAlias,
+      child: Scaffold(
+        appBar: customAppBar(
+          title: 'Edit User',
+          showNotification: false,
+        ),
+        body: Obx(
+          () => ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  children: [
+                    FadeIn(
+                      child: CardPhoto(
+                        image: user.value.photo,
+                        onPhotoPicker: (path) {
+                          user.value.photo = ImageModel.uploadImageWeb(path!);
+                          setState(() {});
+                        },
+                        onClear: () {
+                          user.value.photo = ImageModel.instance;
+                          setState(() {});
+                        },
                       ),
-                      Expanded(
-                        child: FadeInLeft(
-                          from: 20,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    FadeInLeft(
-                                      from: 10,
-                                      child: const Row(
-                                        children: [
-                                          Text("User Type :"),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    DropdownButtonFormField<String>(
-                                      borderRadius: BorderRadius.circular(15),
-                                      isDense: true,
-                                      isExpanded: true,
-                                      value: userType,
-                                      decoration: InputDecoration(
-                                        hintText: "User Type",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 16, horizontal: 12),
-                                        isDense: true,
-                                        border: border,
-                                        enabledBorder: border,
-                                        focusedBorder: border,
-                                      ),
-                                      onChanged: (value) {
-                                        userType = value!;
-                                      },
-                                      items: List.generate(listType.length,
-                                          (index) {
-                                        return DropdownMenuItem<String>(
-                                          value: listType[index],
-                                          child: Text(
-                                            listType[index].trim(),
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              )
-                            ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Text("Tap to update profile user here.")
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildField(
+                            title: 'Name :',
+                            hintText: 'Name',
+                            required: false,
+                            controller: nameCon,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildField(
-                          delay: 50,
-                          title: 'Email :',
-                          hintText: 'Email',
-                          readOnly: true,
-                          required: false,
-                          controller: emailCon,
+                        Expanded(
+                          child: FadeInLeft(
+                            from: 20,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      FadeInLeft(
+                                        from: 10,
+                                        child: const Row(
+                                          children: [
+                                            Text("User Type :"),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      DropdownButtonFormField<String>(
+                                        borderRadius: BorderRadius.circular(15),
+                                        isDense: true,
+                                        isExpanded: true,
+                                        value: userType,
+                                        decoration: InputDecoration(
+                                          hintText: "User Type",
+                                          hintStyle: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 16, horizontal: 12),
+                                          isDense: true,
+                                          border: border,
+                                          enabledBorder: border,
+                                          focusedBorder: border,
+                                        ),
+                                        onChanged: (value) {
+                                          userType = value!;
+                                        },
+                                        items: List.generate(listType.length,
+                                            (index) {
+                                          return DropdownMenuItem<String>(
+                                            value: listType[index],
+                                            child: Text(
+                                              listType[index].trim(),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  buildField(
-                    delay: 100,
-                    title: 'Phone number:',
-                    hintText: 'Phone number',
-                    required: false,
-                    controller: phCon,
-                  ),
-                ],
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildField(
+                            delay: 50,
+                            title: 'Email :',
+                            hintText: 'Email',
+                            readOnly: true,
+                            required: false,
+                            controller: emailCon,
+                          ),
+                        ),
+                      ],
+                    ),
+                    buildField(
+                      delay: 100,
+                      title: 'Phone number:',
+                      hintText: 'Phone number',
+                      required: false,
+                      controller: phCon,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
-            CustomPrimaryButton(
-              textValue: 'Update',
-              textColor: Colors.white,
-              onPressed: () async {
-                var name = nameCon.text.trim();
-                var phone = phCon.text.trim();
-                var email = emailCon.text.trim();
-                if (name.isNotEmpty && phone.isNotEmpty && email.isNotEmpty) {
-                  if (email.isEmail) {
-                    await updateProfile(
-                      email,
-                      name,
-                      phone,
-                      useId: widget.user.id!,
-                    );
+              const SizedBox(height: 40),
+              CustomPrimaryButton(
+                textValue: 'Update',
+                textColor: Colors.white,
+                onPressed: () async {
+                  var name = nameCon.text.trim();
+                  var phone = phCon.text.trim();
+                  var email = emailCon.text.trim();
+                  if (name.isNotEmpty && phone.isNotEmpty && email.isNotEmpty) {
+                    if (email.isEmail) {
+                      await updateProfile(
+                        email,
+                        name,
+                        phone,
+                        useId: widget.user.id!,
+                      );
+                    } else {
+                      alertDialog(desc: 'Invalid Email please try again');
+                    }
                   } else {
-                    alertDialog(desc: 'Invalid Email please try again');
+                    alertDialog(desc: 'Please input all fields !');
                   }
-                } else {
-                  alertDialog(desc: 'Please input all fields !');
-                }
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -224,6 +236,7 @@ class _EditAdminUserState extends State<EditAdminUser> {
     String phone, {
     required String useId,
   }) async {
+    loadingDialog();
     try {
       bool isTypeAdmin = false;
       if (userType.isNotEmpty) {
@@ -231,7 +244,24 @@ class _EditAdminUserState extends State<EditAdminUser> {
           isTypeAdmin = true;
         }
       }
-
+      if (user.value.photo.photoViewBy == PhotoViewBy.file &&
+              user.value.photo.image.value.isNotEmpty ||
+          user.value.photo.bytes != null) {
+        var photo =
+            await AdminProductController().uploadPhoto(user.value.photo);
+        var data = await _apiBaseHelper.onNetworkRequesting(
+          header: null,
+          url: 'users-photo/$useId',
+          body: {
+            'photo': photo,
+          },
+          methode: METHODE.post,
+        );
+        var res = checkResponse(data);
+        if (!res.isSuccess) {
+          return;
+        }
+      }
       var res = await _apiBaseHelper.onNetworkRequesting(
         url: 'users/$useId',
         methode: METHODE.update,
@@ -253,5 +283,6 @@ class _EditAdminUserState extends State<EditAdminUser> {
         'CatchError while enableUser ( error message ) : >> $error',
       );
     }
+    popLoadingDialog();
   }
 }

@@ -2,16 +2,11 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
-import 'package:homework3/modules/cart/screens/success_order.dart';
 import 'package:homework3/modules/profile/screens/address_screen.dart';
 import 'package:homework3/routes/routes.dart';
-import 'package:homework3/utils/StripeHandler.dart';
-import 'package:homework3/utils/break_point.dart';
-import 'package:homework3/utils/colors.dart';
 
 import '../../../model/address_model.dart';
 import '../../../utils/Utilty.dart';
-import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/primary_button.dart';
 import '../components/cart_item.dart';
 import '../controllers/cart_controller.dart';
@@ -77,20 +72,31 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           if (address.value.id != null) {
                             router.pop();
                             if (currentOpt.value == 'Credit / Debit Card') {
-                              showAlertDialog(
-                                  content: const SuccessScreenOrder());
-                              // var isSuccess = await StripePaymentHandle()
-                              //     .stripeMakePayment(amount: widget.total);
-                              if (false) {
-                                loadingDialog();
-                                await cartController.checkOutOrder(
-                                  pymType: currentOpt.value,
-                                  addressId: address.value.id ?? 0,
-                                  total: cartController.cartTotal,
-                                  products: cartController.shoppingCart,
-                                );
-                                popLoadingDialog();
-                              }
+                              // loadingDialog();
+                              // var url = await cartController.createPayment(
+                              //   total: cartController.cartTotal,
+                              // );
+                              // popLoadingDialog();
+                              // launchUrl(Uri.parse(url),
+                              //     mode: LaunchMode.externalApplication);
+                              // await showAlertDialog(
+                              //   content: PaymentWebView(url: url),
+                              // ).then(
+                              //   (isSuccess) async {
+                              //     if (isSuccess == null) return;
+                              //     if (isSuccess) {
+
+                              //     }
+                              //   },
+                              // );
+                              loadingDialog();
+                              await cartController.checkOutOrder(
+                                pymType: currentOpt.value,
+                                addressId: address.value.id ?? 0,
+                                total: cartController.cartTotal,
+                                products: cartController.shoppingCart,
+                              );
+                              popLoadingDialog();
                             } else {
                               loadingDialog();
                               await cartController.checkOutOrder(

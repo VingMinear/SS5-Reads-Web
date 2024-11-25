@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:homework3/modules/cart/controllers/cart_controller.dart';
 import 'package:homework3/modules/cart/screens/check_out_screen.dart';
-import 'package:homework3/routes/routes.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/utils/break_point.dart';
 import 'package:homework3/utils/colors.dart';

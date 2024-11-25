@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:homework3/modules/PageNotFound.dart';
 import 'package:homework3/modules/about_us/about_us.dart';
@@ -8,7 +6,6 @@ import 'package:homework3/modules/admin/dashboard/screen/dashboard_screen.dart';
 import 'package:homework3/modules/admin/dashboard/screen/editing_category_screen.dart';
 import 'package:homework3/modules/admin/dashboard/screen/main_layout_admin.dart';
 import 'package:homework3/modules/admin/order/screens/admin_order_screen.dart';
-import 'package:homework3/modules/admin/product/controller/adproduct_con.dart';
 import 'package:homework3/modules/admin/product/screen/adproduct_detail.dart';
 import 'package:homework3/modules/admin/product/screen/adproduct_screen.dart';
 import 'package:homework3/modules/admin/slides/screens/slide_screen.dart';

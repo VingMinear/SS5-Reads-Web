@@ -11,6 +11,17 @@ class UserModel {
   String? provide;
   bool isActive = true;
   bool isAdmin = false;
+  UserModel.copy(UserModel other)
+      : id = other.id,
+        name = other.name,
+        email = other.email,
+        phone = other.phone,
+        photo = ImageModel.copy(
+            other.photo), // Assuming ImageModel also has a copy constructor
+        provide = other.provide,
+        isActive = other.isActive,
+        isAdmin = other.isAdmin;
+
   UserModel(
       {this.id,
       this.name,

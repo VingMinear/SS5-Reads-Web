@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:homework3/modules/profile/screens/edit_profile_screen.dart';
+import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
+import 'package:homework3/widgets/custom_overlay.dart';
 
 import '../../../utils/SingleTon.dart';
 
@@ -22,7 +25,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     return Obx(
       () => IntrinsicHeight(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            removeOverlay();
+            showAlertDialog(content: const EditProfileScreen());
+          },
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Row(

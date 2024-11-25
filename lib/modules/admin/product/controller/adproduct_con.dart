@@ -196,8 +196,8 @@ class AdminProductController extends GetxController {
     var products = <ProductModel>[];
     loading(true);
     try {
-      var body = <String, dynamic>{"search": txtSearch.text.trim()};
-      var url = 'products';
+      var body = <String, dynamic>{};
+      var url = 'products?search=${txtSearch.text.trim()}';
       METHODE methode = METHODE.get;
       if (selectCate.id != 0) {
         url = "products-category";

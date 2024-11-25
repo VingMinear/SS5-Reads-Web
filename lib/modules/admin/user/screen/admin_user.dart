@@ -57,7 +57,7 @@ class _AdminUserState extends State<AdminUser> {
               child: Row(
                 children: [
                   const Text(
-                    "Orders",
+                    "Users",
                     style: TextStyle(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,

@@ -59,7 +59,7 @@ class AdminUserCon extends GetxController {
           "active": enable,
         },
       );
-      var data = checkResponse(res);
+      checkResponse(res);
     } catch (error) {
       log(
         'CatchError while enableUser ( error message ) : >> $error',

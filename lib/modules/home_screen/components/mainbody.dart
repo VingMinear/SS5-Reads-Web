@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/modules/home_screen/components/footer.dart';
 import 'package:homework3/routes/routes.dart';
-import 'package:homework3/utils/StripeHandler.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/utils/break_point.dart';
 import 'package:homework3/widgets/CustomCachedNetworkImage.dart';
@@ -15,7 +14,6 @@ import 'package:homework3/widgets/product_card.dart';
 import '../../../model/category.dart';
 import '../../../widgets/bannerslide.dart';
 import '../../../widgets/midletext.dart';
-import '../controller/home_controller.dart';
 import '../controller/product_controller.dart';
 
 class MainBody extends StatefulWidget {
@@ -31,7 +29,6 @@ class _MainBodyState extends State<MainBody> {
   late final PageController pageController;
 
   int pageNum = 0;
-  var con = Get.put(HomeController());
   var conPro = Get.put(ProductController());
   var categoryCon = Get.put(CategoryController());
   var loadingCategory = true.obs;
@@ -43,6 +40,7 @@ class _MainBodyState extends State<MainBody> {
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await _getCategory();
+
       await conPro.getRecommentProducts();
     });
     super.initState();
@@ -61,16 +59,6 @@ class _MainBodyState extends State<MainBody> {
       key: keyScaff,
       endDrawer: const Drawer(),
       backgroundColor: const Color.fromARGB(161, 255, 255, 255),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () async {
-          StripeService.makePayment();
-        },
-        child: const Icon(
-          Icons.apple,
-          color: Colors.white,
-        ),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await conPro.getRecommentProducts();
@@ -91,9 +79,7 @@ class _MainBodyState extends State<MainBody> {
                           const SizedBox(
                             height: 3,
                           ),
-                          MyBanner(
-                            banner: con.slidesBanner,
-                          ),
+                          const MyBanner(),
                           Center(
                             child: Container(
                               constraints:
@@ -137,6 +123,7 @@ class _MainBodyState extends State<MainBody> {
                                           router.go(
                                               '/list-products?categoryId=${data.id}');
                                         },
+                                        borderRadius: BorderRadius.circular(15),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color:

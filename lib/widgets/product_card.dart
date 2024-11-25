@@ -29,7 +29,7 @@ class ProductCard extends StatelessWidget {
       borderRadius: borderRadius,
       child: InkWell(
         onTap: () => ontap?.call(data),
-        hoverColor: Colors.grey.shade100,
+        hoverColor: Colors.grey.withOpacity(0.07),
         hoverDuration: const Duration(milliseconds: 250),
         borderRadius: borderRadius,
         child: Ink(

@@ -1,14 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:homework3/constants/color.dart';
 import 'package:homework3/model/Menu.dart';
 import 'package:homework3/routes/routes.dart';
-import 'package:homework3/utils/Log.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/utils/colors.dart';
 import 'package:homework3/utils/logo.dart';
-import 'package:iconsax/iconsax.dart';
 
 class MenuSide extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -23,41 +23,47 @@ class MenuSide extends StatefulWidget {
 }
 
 class _MenuSideState extends State<MenuSide> {
-  var listMenu = <MenuItem>[
-    const MenuItem(
-      title: 'Dashboard',
-      icon: Icon(
-        Icons.dashboard,
-        color: mainColor,
-      ),
-    ),
-    MenuItem(
-      title: 'Order',
-      icon: _svgIcon('assets/icons/home/ic_order.svg'),
-    ),
-    MenuItem(
-      title: 'Product',
-      icon: _svgIcon('assets/icons/home/ic_cart.svg'),
-    ),
-    MenuItem(
-      title: 'User',
-      icon: _svgIcon('assets/icons/ic_user.svg'),
-    ),
-    MenuItem(
-      title: 'Cateogry',
-      icon: _svgIcon(
-        'assets/icons/home/category.svg',
-      ),
-    ),
-    const MenuItem(
-      title: 'SlideShow',
-      icon: Icon(
-        CupertinoIcons.slider_horizontal_below_rectangle,
-        color: mainColor,
-        size: 20,
-      ),
-    ),
-  ];
+  List<MenuItem> get listMenu => <MenuItem>[
+        MenuItem(
+          title: 'Dashboard',
+          isSelected: currentRoute == '/admin',
+          icon: const Icon(
+            Icons.dashboard,
+            color: mainColor,
+          ),
+        ),
+        MenuItem(
+          title: 'Order',
+          isSelected: currentRoute.contains('admin/order'),
+          icon: _svgIcon('assets/icons/home/ic_order.svg'),
+        ),
+        MenuItem(
+          title: 'Product',
+          isSelected: currentRoute.contains('admin/product'),
+          icon: _svgIcon('assets/icons/home/ic_cart.svg'),
+        ),
+        MenuItem(
+          title: 'User',
+          isSelected: currentRoute.contains('admin/user'),
+          icon: _svgIcon('assets/icons/ic_user.svg'),
+        ),
+        MenuItem(
+          title: 'Cateogry',
+          isSelected: currentRoute.contains('admin/category'),
+          icon: _svgIcon(
+            'assets/icons/home/category.svg',
+          ),
+        ),
+        MenuItem(
+          title: 'SlideShow',
+          isSelected: currentRoute.contains('admin/slideshow'),
+          icon: const Icon(
+            CupertinoIcons.slider_horizontal_below_rectangle,
+            color: mainColor,
+            size: 20,
+          ),
+        ),
+      ];
 
   static Widget _svgIcon(String path) {
     return SizedBox(
@@ -70,11 +76,11 @@ class _MenuSideState extends State<MenuSide> {
     );
   }
 
+  static String get currentRoute =>
+      router.routerDelegate.currentConfiguration.uri.toString().toLowerCase();
   @override
   Widget build(BuildContext context) {
-    final currentRoute =
-        router.routerDelegate.currentConfiguration.uri.toString();
-    Log.error(currentRoute);
+    log(currentRoute);
     return Container(
       decoration: BoxDecoration(
         boxShadow: AppColor.boxShadow,
@@ -118,7 +124,7 @@ class _MenuSideState extends State<MenuSide> {
                           }
                         },
                         child: card(
-                          isSelected: false,
+                          isSelected: item.isSelected,
                           item: item,
                         ),
                       ),
@@ -149,6 +155,7 @@ class _MenuSideState extends State<MenuSide> {
                     width: 25,
                     height: 25,
                   ),
+                  isSelected: true,
                   title: "Log Out",
                 ),
               ),
@@ -164,10 +171,9 @@ class _MenuSideState extends State<MenuSide> {
       duration: const Duration(milliseconds: 300),
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(6.0),
-        ),
-        color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+        border: isSelected
+            ? const Border(left: BorderSide(color: mainColor, width: 2))
+            : null,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       alignment: Alignment.center,
@@ -177,8 +183,13 @@ class _MenuSideState extends State<MenuSide> {
             fit: BoxFit.scaleDown,
             child: item.icon,
           ),
-          const SizedBox(width: 15),
-          Text(item.title),
+          const SizedBox(width: 10),
+          Text(
+            item.title,
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+          ),
         ],
       ),
     );

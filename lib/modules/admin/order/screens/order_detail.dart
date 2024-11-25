@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,6 @@ import '../../../../utils/style.dart';
 import '../../../../widgets/CustomButton.dart';
 import '../../../../widgets/CustomCachedNetworkImage.dart';
 import '../../../../widgets/CustomTextFieldSuggestion.dart';
-import '../../../../widgets/google_map.dart';
 import '../controller/adorder_controller.dart';
 
 class OrderDetail extends StatefulWidget {
@@ -56,30 +54,39 @@ class _OrderDetailState extends State<OrderDetail> {
   Widget build(BuildContext context) {
     return GetX<AdOrderController>(
       init: AdOrderController(),
-      builder: (con) => Scaffold(
-        appBar: customAppBar(
-          title: "Order Detail",
-          onPress: () {
-            mapShow(false);
-            log("Back");
-          },
+      builder: (con) => Container(
+        decoration: BoxDecoration(
+          boxShadow: shadow,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
         ),
-        body: loading.value
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    cardAddress(con.orderDetail.value),
-                    const SizedBox(height: 20),
-                    buildPaymentMethod(),
-                    const SizedBox(height: 20),
-                    cardOrder(),
-                  ],
+        clipBehavior: Clip.antiAlias,
+        child: Scaffold(
+          appBar: customAppBar(
+            title: "Order Detail",
+            onPress: () {
+              mapShow(false);
+              log("Back");
+            },
+          ),
+          body: loading.value
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      cardAddress(con.orderDetail.value),
+                      const SizedBox(height: 20),
+                      buildPaymentMethod(),
+                      const SizedBox(height: 20),
+                      cardOrder(),
+                    ],
+                  ),
                 ),
-              ),
-        bottomNavigationBar: loading.value ? const SizedBox.shrink() : button(),
+          bottomNavigationBar:
+              loading.value ? const SizedBox.shrink() : button(),
+        ),
       ),
     );
   }
@@ -146,9 +153,6 @@ class _OrderDetailState extends State<OrderDetail> {
                 onPress: () {
                   showDialogReject();
                 },
-                textStyle: btnTextStyle(
-                  color: Colors.white,
-                ),
                 title: status == OrderStatus.processing
                     ? 'Cancel'
                     : 'Reject'.tr.toUpperCase(),
@@ -188,7 +192,7 @@ class _OrderDetailState extends State<OrderDetail> {
         ),
       );
     } else if (status == OrderStatus.delivering) {
-      return GestureDetector(
+      return InkWell(
         onTap: () async {
           loading(true);
           await con.updateOrder(

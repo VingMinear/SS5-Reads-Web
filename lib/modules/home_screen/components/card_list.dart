@@ -37,6 +37,7 @@ class _CartWidgetState extends State<CardListProduct>
           '/product-detail?pId=${widget.product.productId}&cateId=${widget.product.categoryId}',
         );
       },
+      borderRadius: BorderRadius.circular(15),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         width: double.infinity,

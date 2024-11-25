@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:homework3/constants/color.dart';
 import 'package:homework3/modules/profile/controller/profile_controller.dart';
 import 'package:homework3/utils/Utilty.dart';
 import 'package:homework3/widgets/custom_appbar.dart';
@@ -25,99 +26,106 @@ class _ChangePwdScreenState extends State<ChangePwdScreen> {
   var newCfPwd = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(
-        showNotification: false,
-        title: 'Change Password',
-        backgroundColor: Colors.white,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: shadow,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
       ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
-        child: Obx(() {
-          return Column(
-            children: [
-              buildField(
-                title: 'Current Password :',
-                hintText: 'current password',
-                required: true,
-                controller: oldPwd,
-                obSecure: !obs1.value,
-                suffixIcon: IconButton(
-                  color: Colors.grey,
-                  splashRadius: 1,
-                  icon: SvgPicture.asset(
-                    obs1.value
-                        ? 'assets/icons/ic_eye.svg'
-                        : 'assets/icons/ic_eye_close.svg',
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: Scaffold(
+        appBar: customAppBar(
+          showNotification: false,
+          title: 'Change Password',
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15),
+          child: Obx(() {
+            return Column(
+              children: [
+                buildField(
+                  title: 'Current Password :',
+                  hintText: 'current password',
+                  required: true,
+                  controller: oldPwd,
+                  obSecure: !obs1.value,
+                  suffixIcon: IconButton(
                     color: Colors.grey,
+                    splashRadius: 1,
+                    icon: SvgPicture.asset(
+                      obs1.value
+                          ? 'assets/icons/ic_eye.svg'
+                          : 'assets/icons/ic_eye_close.svg',
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => obs1(!obs1.value),
                   ),
-                  onPressed: () => obs1(!obs1.value),
                 ),
-              ),
-              buildField(
-                delay: 50,
-                title: 'New Password :',
-                hintText: 'current new password',
-                required: true,
-                controller: newPwd,
-                obSecure: !obs2.value,
-                suffixIcon: IconButton(
-                  color: Colors.grey,
-                  splashRadius: 1,
-                  icon: SvgPicture.asset(
-                    obs2.value
-                        ? 'assets/icons/ic_eye.svg'
-                        : 'assets/icons/ic_eye_close.svg',
+                buildField(
+                  delay: 50,
+                  title: 'New Password :',
+                  hintText: 'current new password',
+                  required: true,
+                  controller: newPwd,
+                  obSecure: !obs2.value,
+                  suffixIcon: IconButton(
                     color: Colors.grey,
+                    splashRadius: 1,
+                    icon: SvgPicture.asset(
+                      obs2.value
+                          ? 'assets/icons/ic_eye.svg'
+                          : 'assets/icons/ic_eye_close.svg',
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => obs2(!obs2.value),
                   ),
-                  onPressed: () => obs2(!obs2.value),
                 ),
-              ),
-              buildField(
-                delay: 100,
-                title: 'Confirm New Password:',
-                hintText: 'new password',
-                required: true,
-                controller: newCfPwd,
-                obSecure: !obs3.value,
-                suffixIcon: IconButton(
-                  color: Colors.grey,
-                  splashRadius: 1,
-                  icon: SvgPicture.asset(
-                    obs3.value
-                        ? 'assets/icons/ic_eye.svg'
-                        : 'assets/icons/ic_eye_close.svg',
+                buildField(
+                  delay: 100,
+                  title: 'Confirm New Password:',
+                  hintText: 'new password',
+                  required: true,
+                  controller: newCfPwd,
+                  obSecure: !obs3.value,
+                  suffixIcon: IconButton(
                     color: Colors.grey,
+                    splashRadius: 1,
+                    icon: SvgPicture.asset(
+                      obs3.value
+                          ? 'assets/icons/ic_eye.svg'
+                          : 'assets/icons/ic_eye_close.svg',
+                      color: Colors.grey,
+                    ),
+                    onPressed: () => obs3(!obs3.value),
                   ),
-                  onPressed: () => obs3(!obs3.value),
                 ),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              FadeInDown(
-                delay: const Duration(milliseconds: 190),
-                from: 10,
-                child: CustomPrimaryButton(
-                  textValue: 'Change',
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    dismissKeyboard(context);
-                    if (checkValidate()) {
-                      loadingDialog();
-                      await ProfileController().changePwd(
-                        newPwd: newCfPwd.text.trim(),
-                        oldPwd: oldPwd.text.trim(),
-                      );
-                      popLoadingDialog();
-                    }
-                  },
+                const SizedBox(
+                  height: 32,
                 ),
-              ),
-            ],
-          );
-        }),
+                FadeInDown(
+                  delay: const Duration(milliseconds: 190),
+                  from: 10,
+                  child: CustomPrimaryButton(
+                    textValue: 'Change',
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      dismissKeyboard(context);
+                      if (checkValidate()) {
+                        loadingDialog();
+                        await ProfileController().changePwd(
+                          newPwd: newCfPwd.text.trim(),
+                          oldPwd: oldPwd.text.trim(),
+                        );
+                        popLoadingDialog();
+                      }
+                    },
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }
